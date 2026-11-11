@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon Agence</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+    <h1>🏠 Mon Agence</h1>
+    <input type="search" id="globalSearch" placeholder="Rechercher un contact, un bien…">
+  </header>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <a href="#dashboard" data-view="dashboard">📊 Tableau de bord</a>
+      <a href="#contacts" data-view="contacts">👥 Contacts</a>
+      <a href="#biens" data-view="biens">🏡 Biens &amp; mandats</a>
+      <a href="#agenda" data-view="agenda">📅 Agenda</a>
+      <a href="#taches" data-view="taches">✅ Tâches</a>
+      <a href="#ventes" data-view="ventes">💶 Ventes &amp; honoraires</a>
+      <a href="#parametres" data-view="parametres">⚙️ Paramètres</a>
+    </nav>
+    <main id="main"></main>
+  </div>
+
+  <dialog id="modal">
+    <form method="dialog" id="modalForm">
+      <h2 id="modalTitle"></h2>
+      <div id="modalBody" class="form-grid"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn danger" id="modalDelete">Supprimer</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="modalCancel">Annuler</button>
+        <button type="submit" class="btn primary">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

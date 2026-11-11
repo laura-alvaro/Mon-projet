@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1f5eff">
   <title>Mon Agence</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -10,19 +11,39 @@
   <header class="topbar">
     <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
     <h1>🏠 Mon Agence</h1>
-    <input type="search" id="globalSearch" placeholder="Rechercher un contact, un bien…">
+    <input type="search" id="globalSearch" placeholder="Rechercher un contact, un dossier…">
+    <button class="btn ai cp-toggle" id="cpToggle">✨ <span>Copilote</span></button>
   </header>
   <div class="layout">
     <nav class="sidebar" id="sidebar">
       <a href="#dashboard" data-view="dashboard">📊 Tableau de bord</a>
+      <a href="#dossiers" data-view="dossiers">🏡 Dossiers &amp; mandats</a>
       <a href="#contacts" data-view="contacts">👥 Contacts</a>
-      <a href="#biens" data-view="biens">🏡 Biens &amp; mandats</a>
       <a href="#agenda" data-view="agenda">📅 Agenda</a>
-      <a href="#taches" data-view="taches">✅ Tâches</a>
+      <a href="#taches" data-view="taches">✅ Tâches &amp; relances</a>
+      <a href="#offres" data-view="offres">📝 Offres d'achat</a>
+      <a href="#recherches" data-view="recherches">🔎 Recherches acquéreurs</a>
+      <a href="#locations" data-view="locations">🔑 Candidatures locatives</a>
       <a href="#ventes" data-view="ventes">💶 Ventes &amp; honoraires</a>
       <a href="#parametres" data-view="parametres">⚙️ Paramètres</a>
     </nav>
     <main id="main"></main>
+    <aside class="copilot" id="copilot" aria-label="Copilote">
+      <div class="cp-head"><strong>✨ Copilote</strong><span class="spacer"></span>
+        <button class="btn small" id="cpReset" title="Nouvelle conversation">Nouveau</button>
+        <button class="btn small" id="cpClose" aria-label="Fermer">✕</button></div>
+      <div class="cp-messages" id="cpMessages"></div>
+      <form class="cp-input" id="cpForm">
+        <div id="cpFiles" class="muted"></div>
+        <textarea id="cpInput" rows="2" placeholder="Posez votre question, demandez un mail, une analyse…"></textarea>
+        <div class="cp-row">
+          <label class="btn small" title="Joindre un PDF ou une photo">📎<input type="file" id="cpAttach" multiple accept="application/pdf,image/*,text/plain" hidden></label>
+          <button type="button" class="btn small" id="cpMic" title="Dicter">🎤</button>
+          <span class="spacer"></span>
+          <button class="btn primary" id="cpSend">Envoyer</button>
+        </div>
+      </form>
+    </aside>
   </div>
 
   <dialog id="modal">
@@ -38,6 +59,13 @@
     </form>
   </dialog>
 
-  <script src="app.js"></script>
+  <script src="vendor/anthropic-sdk.js"></script>
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/google.js"></script>
+  <script src="js/documents.js"></script>
+  <script src="js/copilot.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/panel.js"></script>
 </body>
 </html>

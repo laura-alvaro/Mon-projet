@@ -13,6 +13,14 @@ Ce dossier est mon bureau numérique : dossiers clients, suivi, documents, rése
 - Ne jamais inventer un prix, une surface, un diagnostic ou une information juridique : demander ou signaler « à vérifier ».
 - Les questions juridiques complexes → renvoyer vers le notaire, le juridique IAD ou un avocat.
 
+## Outils connectés (connecteurs Claude)
+- **Gmail** (laura.alvaro@iadfrance.fr) : lire les demandes, préparer des **brouillons** — ne jamais envoyer sans mon accord.
+- **Google Agenda** : rendez-vous, visites, estimations — ne rien créer/modifier sans mon accord.
+- **Google Drive / Sheets** : documents et tableaux (ex. « Suivi de rémunération.xlsx » pour les commissions).
+- **Docusign** : suivi des signatures (mandats, offres) — ne jamais envoyer d'enveloppe sans mon accord.
+- Notifications à exploiter : **Playiad** (rapprochements et réponses des acquéreurs), **Leboncoin**, **Bien'ici** (statistiques),
+  confrères (Safti, Weinvest… : collaborations inter-agences).
+
 ## Organisation des dossiers
 | Dossier | Contenu |
 |---|---|

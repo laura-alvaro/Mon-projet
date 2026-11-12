@@ -1,0 +1,45 @@
+feature,area,priority,original,clone,notes
+Inscription et connexion (email ou Google / Microsoft),compte,must,yes,no,essai 14 jours chez TALQOR
+Connexion d'une boîte mail Gmail ou Outlook,intégrations,must,yes,no,MVP perso : OAuth sur ton propre compte ou adresse de transfert
+Synchronisation Google Calendar,intégrations,must,yes,no,
+Créer un bien (adresse type copropriété surface caractéristiques),biens,must,yes,no,
+Saisir le mandat (type date de signature durée prix honoraires numéro),mandats,must,partial,no,champs exacts non vus chez TALQOR : déduits des règles de la loi Hoguet
+Liste des biens en mandat avec statut et filtres,biens,must,yes,no,
+Fiche dossier : infos visites offres documents échanges interlocuteurs,biens,must,yes,no,
+Suivi des visites avec compte rendu,biens,must,yes,no,
+Suivi des offres (montant acquéreur statut),biens,must,yes,no,
+Étape du dossier (mandat commercialisation offre compromis acte clos),biens,must,partial,no,étapes déduites
+Alerte d'échéance de mandat,mandats,must,unknown,no,non vu explicitement chez TALQOR ; essentiel pour une conseillère iad
+Contacts avec rôle (vendeur acquéreur notaire syndic diagnostiqueur),clients,must,yes,no,
+Fiche contact avec historique (emails RDV dossiers),clients,must,yes,no,
+Pièces classées par famille (vendeur bien diagnostics copropriété),documents,must,yes,no,
+Checklist des pièces requises selon le type de bien,documents,must,yes,no,
+Alerte pièces manquantes,documents,must,yes,no,
+Dépôt manuel de pièces,documents,must,unknown,no,
+Classement IA des pièces reçues par email vers le bon dossier,automatisation,must,yes,no,
+File de validation des propositions IA (valider ajuster écarter),automatisation,must,yes,no,cœur du produit : rien ne part sans accord
+Brouillon IA de relance pour les pièces manquantes,automatisation,must,yes,no,
+Réglages d'autonomie de l'IA par type d'action,automatisation,must,yes,no,défaut = tout en validation
+Bordereau récapitulatif des pièces pour le notaire (PDF),documents,should,yes,no,
+Validation obligatoire avant envoi au notaire,documents,should,yes,no,
+Distinction pré-état daté et état daté dans la checklist,documents,should,yes,no,
+Date de validité des diagnostics et alerte de péremption,documents,should,unknown,no,
+Détection des opportunités de relance (anciens vendeurs acquéreurs estimations),automatisation,should,yes,no,
+Relance aux dates clés (anniversaire d'acquisition),automatisation,should,yes,no,
+Brouillon IA de réponse à une offre ou au vendeur après visite,automatisation,should,yes,no,
+Rattachement automatique des emails aux dossiers et contacts,automatisation,should,yes,no,
+Synchronisation Outlook Calendar ou Apple Calendar,intégrations,should,yes,no,
+Import de pièces depuis Google Drive ou OneDrive,intégrations,should,yes,no,
+Consentement et désinscription des relances (RGPD),clients,should,unknown,no,obligatoire légalement même si non vu chez TALQOR
+Copie de suivi du registre des mandats (export),mandats,should,unknown,no,suivi seulement ; le registre légal reste chez iad
+Agent Photo (retouche des photos du bien),agents IA,could,yes,no,
+Agent diffusion (préparation des annonces),agents IA,could,yes,no,
+Messages WhatsApp via l'API WhatsApp Business,intégrations,could,yes,no,API Business officielle seulement : numéro dédié et modèles approuvés
+Connexion Instagram Facebook LinkedIn,intégrations,could,yes,no,
+Tableau de bord d'activité (mandats actifs pièces en attente relances),pilotage,could,unknown,no,
+Quotas par formule (mandats actifs usages IA),abonnement,could,yes,no,utile seulement si tu vends l'outil
+Lecture d'un WhatsApp personnel,intégrations,could,yes,skip,pas d'API officielle ; l'automatiser viole les conditions de WhatsApp
+Permanence téléphonique IA,téléphonie,could,yes,skip,hors périmètre demandé
+Outils agence (boîte commune agenda partagé rapports),agence,could,yes,skip,inutile en solo
+Registre légal des mandats,mandats,could,unknown,skip,tenu par le réseau iad (titulaire de la carte)
+Intégration au back-office et à la diffusion iad,intégrations,could,no,skip,aucune API publique

@@ -3,15 +3,16 @@
    Identité visuelle : nom, mascotte, icônes, thèmes de couleur
    ========================================================= */
 const THEMES = {
+  bordeaux: { label: 'Bordeaux & cerise', primary: '#7d1d3f', primary2: '#c2335a', accent: '#e8435f', soft: '#f8e6eb', bg1: '#fbeff2', bg2: '#fff4f0' },
   emeraude: { label: 'Émeraude & corail', primary: '#0e9384', primary2: '#2dd4bf', accent: '#ff7a59', soft: '#e3f6f2', bg1: '#eefaf7', bg2: '#fff4ee' },
   ocean: { label: 'Marine & ambre', primary: '#1d4e89', primary2: '#4f8fd6', accent: '#f2a93b', soft: '#e6eef8', bg1: '#eef3fa', bg2: '#fff7ea' },
   framboise: { label: 'Framboise & nuit', primary: '#c2255c', primary2: '#f06595', accent: '#3b3f8f', soft: '#fbe7ef', bg1: '#fcf0f4', bg2: '#eff0fb' },
   sauge: { label: 'Sauge & terracotta', primary: '#4d7c5b', primary2: '#8fbf9a', accent: '#d9734e', soft: '#e9f2eb', bg1: '#f2f7f2', bg2: '#fbf1ea' },
 };
-const appName = () => (typeof db !== 'undefined' && db.settings.appName) || 'Hestia';
+const appName = () => (typeof db !== 'undefined' && db.settings.appName) || 'Cerise';
 
 function applyTheme() {
-  const t = THEMES[db.settings.theme] || THEMES.emeraude;
+  const t = THEMES[db.settings.theme] || THEMES.bordeaux;
   const r = document.documentElement.style;
   r.setProperty('--primary', t.primary); r.setProperty('--primary-2', t.primary2); r.setProperty('--accent', t.accent);
   r.setProperty('--primary-soft-l', t.soft); r.setProperty('--bg1-l', t.bg1); r.setProperty('--bg2-l', t.bg2);
@@ -26,7 +27,7 @@ function mascot(size = 64, mood = 'happy') {
     ? '<circle cx="40" cy="60" r="7" fill="#fff"/><circle cx="41.5" cy="61" r="3.6" fill="#1b2430"/><path d="M55 61 q6 -5 12 0" stroke="#1b2430" stroke-width="3" fill="none" stroke-linecap="round"/>'
     : '<circle cx="40" cy="60" r="7" fill="#fff"/><circle cx="64" cy="60" r="7" fill="#fff"/><circle cx="41.5" cy="61" r="3.6" fill="#1b2430"/><circle cx="65.5" cy="61" r="3.6" fill="#1b2430"/><circle cx="43" cy="59.5" r="1.2" fill="#fff"/><circle cx="67" cy="59.5" r="1.2" fill="#fff"/>';
   return `<svg class="mascot" width="${size}" height="${size}" viewBox="0 0 104 104" aria-hidden="true">
-    <g class="m-smoke"><circle cx="76" cy="12" r="4" fill="var(--accent)" opacity=".35"/><circle cx="82" cy="5" r="3" fill="var(--accent)" opacity=".2"/></g>
+    <g class="m-smoke"><path d="M75.5 18 Q78 8 86 3 M75.5 18 Q84 12 93 13" stroke="#3f7d3a" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M86 3 q5 -2 7 2 q-4 2 -7 -2z" fill="#4f9a47"/><circle cx="86" cy="9" r="5" fill="var(--primary-2)"/><circle cx="93" cy="16" r="5" fill="var(--primary-2)"/><circle cx="84.5" cy="7.5" r="1.4" fill="#fff" opacity=".7"/><circle cx="91.5" cy="14.5" r="1.4" fill="#fff" opacity=".7"/></g>
     <rect x="70" y="18" width="11" height="18" rx="2.5" fill="var(--accent)"/>
     <path d="M12 50 L52 16 Q53 15 54 16 L92 50 Q94 53 90 54 L14 54 Q10 53 12 50Z" fill="var(--accent)"/>
     <rect x="20" y="44" width="64" height="50" rx="14" fill="var(--primary)"/>

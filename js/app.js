@@ -734,7 +734,7 @@ views.parametres = () => {
     <p class="muted full">Recopiez ces informations depuis vos documents officiels : elles apparaissent en pied de page de tous les documents générés.</p>
     <label class="full">Statut<input name="statutPro" value="${esc(s.statutPro)}"></label>
     <label>Réseau<input name="reseau" value="${esc(s.reseau)}" placeholder="Nom de votre réseau"></label>
-    <label>Couleur des documents<input type="color" name="docColor" value="${esc(s.docColor || (THEMES[s.theme] || THEMES.emeraude).primary)}"></label>
+    <label>Couleur des documents<input type="color" name="docColor" value="${esc(s.docColor || (THEMES[s.theme] || THEMES.bordeaux).primary)}"></label>
     <label class="full">Mention du réseau (telle qu'elle figure sur vos documents officiels)<textarea name="mentionReseau" rows="2" placeholder="ex. : Agent commercial de la société … , titulaire de la carte professionnelle n° … délivrée par la CCI de …">${esc(s.mentionReseau)}</textarea></label>
     <label>N° RSAC<input name="rsac" value="${esc(s.rsac)}"></label>
     <label>Ville du RSAC<input name="rsacVille" value="${esc(s.rsacVille)}"></label>
@@ -751,7 +751,7 @@ views.parametres = () => {
     <div class="card mb"><h3>Apparence</h3>
       <label class="muted">Nom de l'application<input id="appNameInput" value="${esc(appName())}" style="margin:6px 0 12px"></label>
       <div class="muted" style="margin-bottom:6px">Couleurs</div>
-      <div class="swatches">${Object.entries(THEMES).map(([k, t]) => `<button class="swatch ${(s.theme || 'emeraude') === k ? 'on' : ''}" data-theme-pick="${k}"><i style="background:linear-gradient(135deg, ${t.primary} 50%, ${t.accent} 50%)"></i>${esc(t.label)}</button>`).join('')}</div>
+      <div class="swatches">${Object.entries(THEMES).map(([k, t]) => `<button class="swatch ${(s.theme || 'bordeaux') === k ? 'on' : ''}" data-theme-pick="${k}"><i style="background:linear-gradient(135deg, ${t.primary} 50%, ${t.accent} 50%)"></i>${esc(t.label)}</button>`).join('')}</div>
       <div class="actions-wrap mt">
         <label class="btn small">🖼️ Mon logo (documents)<input type="file" accept="image/png,image/jpeg" hidden data-upload-brand="logoFileId"></label>
         <label class="btn small">🙂 Ma photo<input type="file" accept="image/*" hidden data-upload-brand="photoFileId"></label>
@@ -888,7 +888,7 @@ document.addEventListener('change', async (e) => {
     addHistorique(b, `${t.files.length} photo(s) ajoutée(s)`); save(); render();
   }
   if (t.id === 'importInput' && t.files[0]) importAll(t.files[0]);
-  if (t.id === 'appNameInput') { db.settings.appName = t.value.trim() || 'Hestia'; save(); applyTheme(); Copilot.render(); }
+  if (t.id === 'appNameInput') { db.settings.appName = t.value.trim() || 'Cerise'; save(); applyTheme(); Copilot.render(); }
   if (t.dataset.uploadBrand && t.files[0]) { const k = t.dataset.uploadBrand; if (db.settings[k]) await Files.del(db.settings[k]).catch(() => { }); db.settings[k] = await Files.put(await resizeImage(t.files[0], 800), t.files[0].name); save(); render(); initChrome(); }
   if (t.dataset.uploadModele && t.files[0]) {
     const type = t.dataset.uploadModele, f = t.files[0], old = findModele(type);

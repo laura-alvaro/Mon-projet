@@ -50,7 +50,7 @@ const DEFAULT_DATA = {
   settings: {
     nom: '', email: '', tel: '', signature: '', tauxCommission: 70, tva: 20, objectifAnnuel: 60000,
     apiKey: '', model: 'claude-opus-5-5', googleClientId: '', miniSite: '',
-    appName: 'Hestia', theme: 'emeraude', photoFileId: '',
+    appName: 'Cerise', theme: 'bordeaux', brandV: 2, photoFileId: '',
     // Identité professionnelle reprise sur tous les documents (à recopier depuis vos documents officiels)
     statutPro: 'Agent commercial immobilier indépendant', reseau: '', mentionReseau: '', rsac: '', rsacVille: '',
     assurance: '', adressePro: '', logoFileId: '', docColor: '',
@@ -78,6 +78,8 @@ function load() {
       const d = JSON.parse(raw);
       const out = Object.assign(structuredClone(DEFAULT_DATA), d);
       out.settings = Object.assign(structuredClone(DEFAULT_DATA.settings), d.settings || {});
+      // Nouvelle identité « Cerise » (bordeaux & cerise) si l'ancienne n'avait pas été personnalisée
+      if (!out.settings.brandV) { if (!out.settings.appName || out.settings.appName === 'Hestia') out.settings.appName = 'Cerise'; if (!out.settings.theme || out.settings.theme === 'emeraude') { out.settings.theme = 'bordeaux'; out.settings.docColor = ''; } out.settings.brandV = 2; }
       return migrate(out);
     }
   } catch (e) { console.warn('Lecture impossible', e); }

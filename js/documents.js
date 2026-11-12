@@ -25,8 +25,8 @@ function mentionsPro() {
     s.assurance, s.adressePro, [s.tel, s.email].filter(Boolean).join(' · '),
   ].filter(Boolean);
 }
-const hexToRgb = (h) => { const m = /^#?([0-9a-f]{6})$/i.exec(h || ''); if (!m) return [14, 147, 132]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
-const docColor = () => hexToRgb(db.settings.docColor || (THEMES[db.settings.theme] || THEMES.emeraude).primary);
+const hexToRgb = (h) => { const m = /^#?([0-9a-f]{6})$/i.exec(h || ''); if (!m) return [125, 29, 63]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+const docColor = () => hexToRgb(db.settings.docColor || (THEMES[db.settings.theme] || THEMES.bordeaux).primary);
 let logoCache = null;
 async function getLogo() {
   if (!db.settings.logoFileId) return null;

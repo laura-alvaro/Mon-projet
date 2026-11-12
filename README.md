@@ -1,4 +1,4 @@
-# Hestia – l'outil de la conseillère immobilière, avec son assistante IA
+# Cerise – l'outil de la conseillère immobilière, avec son assistante IA
 
 Application pour gérer toute une activité de conseiller·ère immobilier·ère indépendant·e : mandats, vendeurs, acquéreurs, documents, visites, offres, notaires, locations… avec un **copilote** à qui l'on peut tout demander.
 
@@ -24,7 +24,7 @@ Aucune installation : ouvrez `index.html` dans Chrome, Edge ou Safari (ordinateu
 ## Apparence
 
 - Cockpit d'accueil : priorités du jour, agenda (jour / semaine / mois), automatisations du jour (bon de visite avant chaque visite, message « suite à votre visite », confirmations de la veille), rappels.
-- Mascotte maison « Hestia », 4 palettes de couleurs au choix, mode sombre automatique.
+- Mascotte maison « Cerise », 5 palettes (bordeaux & cerise par défaut) de couleurs au choix, mode sombre automatique.
 - Le nom de l'application, les couleurs, votre photo et votre logo se changent dans **Paramètres → Apparence**.
 
 ## Documents à l'image de votre réseau

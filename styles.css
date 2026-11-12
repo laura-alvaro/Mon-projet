@@ -2,8 +2,8 @@
    Thème : les couleurs principales viennent de js/brand.js
    ========================================================= */
 :root {
-  --primary: #0e9384; --primary-2: #2dd4bf; --accent: #ff7a59;
-  --primary-soft-l: #e3f6f2; --bg1-l: #eefaf7; --bg2-l: #fff4ee;
+  --primary: #7d1d3f; --primary-2: #c2335a; --accent: #e8435f;
+  --primary-soft-l: #f8e6eb; --bg1-l: #fbeff2; --bg2-l: #fff4f0;
   --primary-soft: var(--primary-soft-l); --bg1: var(--bg1-l); --bg2: var(--bg2-l);
   --panel: rgba(255,255,255,.86); --panel-solid: #fff; --text: #1b2430; --muted: #6b7486; --border: #e6e9f0;
   --bg: #f5f7fa; --danger: #e03e3e; --ok: #1a9a5c; --warn: #d98a00;

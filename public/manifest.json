@@ -1,0 +1,9 @@
+{
+  "name": "Assistant Immo",
+  "short_name": "Immo",
+  "start_url": "/#aujourdhui",
+  "display": "standalone",
+  "background_color": "#f5f6f8",
+  "theme_color": "#1f3a5f",
+  "lang": "fr"
+}

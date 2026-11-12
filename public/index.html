@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1f3a5f">
+  <link rel="manifest" href="manifest.json">
+  <title>Assistant Immo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="entete">
+    <h1>Assistant Immo</h1>
+    <button class="btn-icone" id="btn-actualiser" title="Lancer les automatisations maintenant" aria-label="Actualiser">⟳</button>
+  </header>
+
+  <main id="vue"></main>
+
+  <nav class="navigation">
+    <a href="#aujourdhui" data-vue="aujourdhui"><span>☀︎</span>Aujourd'hui</a>
+    <a href="#contacts" data-vue="contacts"><span>👥</span>Clients</a>
+    <a href="#agenda" data-vue="agenda"><span>📅</span>Agenda</a>
+    <a href="#modeles" data-vue="modeles"><span>✉︎</span>Messages</a>
+    <a href="#reglages" data-vue="reglages"><span>⚙︎</span>Réglages</a>
+  </nav>
+
+  <dialog id="fenetre"><div id="fenetre-contenu"></div></dialog>
+  <div id="notification" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

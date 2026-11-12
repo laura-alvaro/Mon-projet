@@ -49,7 +49,7 @@ outils/             nouveau-dossier.sh · photo/ciel.py · video/reel.py
 Outils requis sur l'ordinateur : Python 3 (`pip install pillow numpy`) et ffmpeg.
 
 ## 🚀 Pour démarrer (15 minutes)
-1. Compléter `modeles/ma-signature.md` et `suivi/mes-parametres.md` (secteur, objectif, taux IAD, réseaux).
+1. Compléter `modeles/ma-signature.md`, copier `modeles/mes-parametres-modele.md` en `suivi/mes-parametres.md` et le remplir (secteur, objectif, taux IAD, réseaux).
 2. Copier `modeles/pipeline-modele.csv` en `suivi/pipeline.csv` et y lister les clients en cours.
 3. Connecter Gmail, Google Agenda, Google Drive et Canva dans claude.ai › Paramètres › Connecteurs.
 4. Demander : « Brief du jour » 🎯

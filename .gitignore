@@ -6,9 +6,10 @@ clients/*
 !clients/README.md
 suivi/pipeline.csv
 suivi/commissions.csv
-a-traiter/**
-!a-traiter/**/.gitkeep
-reseaux-sociaux/publications/**
+a-traiter/photos/*
+a-traiter/videos/*
+!a-traiter/*/.gitkeep
+reseaux-sociaux/publications/*
 !reseaux-sociaux/publications/.gitkeep
 *.mp4
 *.mov

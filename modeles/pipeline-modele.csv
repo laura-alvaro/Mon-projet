@@ -1,0 +1,2 @@
+dossier,type,nom,telephone,email,ville_bien,statut,prix,date_mandat,fin_mandat,derniere_action,prochaine_action,date_relance,source,notes
+2026-11_EXEMPLE_Ville_vendeur,vendeur,M. et Mme EXEMPLE,06 00 00 00 00,exemple@mail.fr,Ville,estimation,,,,Estimation faite le 10/11,Envoyer avis de valeur,2026-11-14,Boîtage,Ligne d'exemple à supprimer

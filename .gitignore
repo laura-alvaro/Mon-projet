@@ -1,0 +1,17 @@
+# RGPD : les données clients ne doivent JAMAIS partir sur GitHub.
+# Seuls les dossiers modèles sont versionnés.
+clients/*
+!clients/_MODELE_VENDEUR/
+!clients/_MODELE_ACQUEREUR/
+!clients/README.md
+suivi/pipeline.csv
+suivi/commissions.csv
+a-traiter/**
+!a-traiter/**/.gitkeep
+reseaux-sociaux/publications/**
+!reseaux-sociaux/publications/.gitkeep
+*.mp4
+*.mov
+__pycache__/
+.env
+suivi/mes-parametres.md

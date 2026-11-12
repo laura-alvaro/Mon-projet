@@ -24,6 +24,7 @@ function docChecklist(bien) {
   const base = [
     ['Vendeur', 'Pièce d\'identité vendeur(s)'], ['Vendeur', 'Titre de propriété'], ['Vendeur', 'Mandat signé'],
     ['Vendeur', 'Taxe foncière'], ['Vendeur', 'Situation matrimoniale / livret de famille'],
+    ['Vendeur', 'Fiche de vigilance vendeur (LCB-FT)'],
     ['Diagnostics', 'DPE'], ['Diagnostics', 'Électricité'], ['Diagnostics', 'Gaz'], ['Diagnostics', 'Amiante'],
     ['Diagnostics', 'Plomb (CREP)'], ['Diagnostics', 'Termites'], ['Diagnostics', 'État des risques (ERP)'],
     ['Bien', 'Factures travaux / garanties décennales'], ['Bien', 'Plans'],
@@ -36,17 +37,23 @@ function docChecklist(bien) {
     ['Copropriété', 'Appels de charges (3 derniers)'], ['Copropriété', 'Pré-état daté'],
   );
   if (bien.succession === 'Oui') base.push(['Succession', 'Attestation de propriété / acte de notoriété'], ['Succession', 'Accord de tous les héritiers']);
-  base.push(['Acquéreur', 'Offre d\'achat signée'], ['Acquéreur', 'Pièce d\'identité acquéreur(s)'], ['Acquéreur', 'Attestation de financement']);
+  base.push(['Acquéreur', 'Offre d\'achat signée'], ['Acquéreur', 'Pièce d\'identité acquéreur(s)'], ['Acquéreur', 'Attestation de financement'], ['Acquéreur', 'Fiche de vigilance acquéreur (LCB-FT)']);
   return base;
 }
+const MODELE_TYPES = ['Bon de visite', 'Mandat de vente', 'Mandat de recherche', 'Mandat de location', 'Offre d\'achat', 'Acceptation / contre-proposition', 'Avis de valeur', 'Fiche de vigilance vendeur', 'Fiche de vigilance acquéreur', 'Fiche de renseignements vendeur', 'Délégation de mandat', 'Bon de commande diagnostics', 'Compte rendu de visite', 'Bilan de commercialisation', 'Autre'];
 const DOC_CATEGORIES = ['Vendeur', 'Diagnostics', 'Copropriété', 'Succession', 'Bien', 'Acquéreur', 'Visites', 'Compromis / acte', 'Location', 'Autre'];
 const PIECES_CANDIDAT = ['Pièce d\'identité', '3 derniers bulletins de salaire', 'Contrat de travail', 'Dernier avis d\'imposition', 'Justificatif de domicile', 'Dossier garant'];
 
 const DEFAULT_DATA = {
   contacts: [], biens: [], rdv: [], taches: [], ventes: [], offres: [], selections: [], candidatures: [],
+  modeles: [], automations: {},
   settings: {
     nom: '', email: '', tel: '', signature: '', tauxCommission: 70, tva: 20, objectifAnnuel: 60000,
     apiKey: '', model: 'claude-opus-5-5', googleClientId: '', miniSite: '',
+    appName: 'Hestia', theme: 'emeraude', photoFileId: '',
+    // Identité professionnelle reprise sur tous les documents (à recopier depuis vos documents officiels)
+    statutPro: 'Agent commercial immobilier indépendant', reseau: '', mentionReseau: '', rsac: '', rsacVille: '',
+    assurance: '', adressePro: '', logoFileId: '', docColor: '',
   },
 };
 

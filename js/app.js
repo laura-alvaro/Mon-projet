@@ -300,39 +300,152 @@ function matchSearch(obj) {
    ========================================================= */
 const views = {};
 
+/* ---------- Priorités du jour ---------- */
+function priorites() {
+  const out = [];
+  for (const b of db.biens.filter(b => ['Offre acceptée', 'Sous compromis'].includes(b.etape))) {
+    const vig = b.documents.filter(d => /vigilance/i.test(d.nom) && !['Reçu', 'Validé', 'Non concerné'].includes(d.statut));
+    if (vig.length) out.push({ hot: true, icon: 'shield', titre: `${vig.length} fiche(s) de vigilance à établir`, sub: `${bienName(b.id)} · obligation LCB-FT avant compromis`, href: `#dossier/${b.id}/documents` });
+  }
+  for (const a of alertes()) {
+    const [t1, ...rest] = a.txt.includes(' : ') ? a.txt.split(' : ') : a.txt.split(' – ');
+    out.push({ hot: a.niveau === 'danger', icon: a.niveau === 'danger' ? 'bolt' : a.href.includes('offres') ? 'file' : a.href.includes('documents') ? 'doc' : 'clock', titre: t1, sub: rest.join(' – '), href: a.href });
+  }
+  for (const r of db.rdv.filter(r => r.type === 'Visite' && r.date.slice(0, 10) < todayISO() && !r.compteRendu).slice(0, 5))
+    out.push({ icon: 'megaphone', titre: `Retour de visite à saisir`, sub: `${contactName(r.contactId)} · ${bienName(r.bienId)} (${fmtDate(r.date)})`, href: `#dossier/${r.bienId}/visites` });
+  for (const c of relances(21).slice(0, 4)) out.push({ icon: 'phone', titre: `Relancer ${c.nom}`, sub: c.dernierEchange ? `Dernier échange le ${fmtDate(c.dernierEchange)}` : 'Jamais relancé', href: `#contact/${c.id}` });
+  for (const a of anniversaires(1)) out.push({ icon: 'cake', titre: `Anniversaire de ${a.nom}`, sub: a.dans === 0 ? "C'est aujourd'hui 🎉" : 'Demain', href: `#contact/${a.id}` });
+  return out;
+}
+
+/* ---------- Automatisations du jour (préparées par l'application) ---------- */
+function automationsDuJour() {
+  const today = todayISO(), list = [];
+  const tomorrow = new Date(Date.now() + 86400000); const tISO = new Date(tomorrow - tomorrow.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  const at = (date, minutes) => { const d = new Date(date); d.setMinutes(d.getMinutes() + minutes); return d; };
+  for (const r of db.rdv.filter(r => r.date.startsWith(today))) {
+    if (r.type === 'Visite' && r.bienId) {
+      list.push({ key: `bon-${r.id}`, when: at(r.date, -75), titre: 'Bon de visite', sub: `${(contactName(r.contactId) || 'Visiteur').toUpperCase()} · rendez-vous ${r.date.slice(11, 16)}`, rdv: r, action: 'bon' });
+      list.push({ key: `suite-${r.id}`, when: at(r.date, (Number(r.duree) || 60) + 60), titre: 'Suite à votre visite', sub: `${(contactName(r.contactId) || 'Visiteur').toUpperCase()} · demande d'avis`, rdv: r, action: 'suite' });
+    }
+  }
+  for (const r of db.rdv.filter(r => r.date.startsWith(tISO) && r.contactId)) {
+    const d = new Date(); d.setHours(18, 0, 0, 0);
+    list.push({ key: `conf-${r.id}`, when: d, titre: 'Confirmation de rendez-vous', sub: `${contactName(r.contactId).toUpperCase()} · demain ${r.date.slice(11, 16)}`, rdv: r, action: 'conf' });
+  }
+  return list.sort((a, b) => a.when - b.when).map(a => ({ ...a, fait: !!db.automations[a.key], passe: a.when < new Date() }));
+}
+function runAutomation(key) {
+  const a = automationsDuJour().find(x => x.key === key); if (!a) return;
+  const c = getContact(a.rdv.contactId);
+  if (a.action === 'bon') Copilot.open(`Pour la visite de ${contactName(a.rdv.contactId)} le ${fmtDateTime(a.rdv.date)} (rdv_id ${a.rdv.id}) : génère le bon de visite (modèle officiel s'il existe), puis prépare l'e-mail au visiteur avec le bon de visite et les documents utiles du bien en pièces jointes, et un WhatsApp de confirmation.`);
+  else if (a.action === 'suite') { if (c?.tel) window.open(waLink(c.tel, `Bonjour ${c.prenom || ''}, merci pour votre visite ${a.rdv.bienId ? 'du bien ' + bienName(a.rdv.bienId) + ' ' : ''}aujourd'hui. Qu'en avez-vous pensé ? Je reste à votre disposition pour toute question ou pour une seconde visite.\n${db.settings.nom || ''}`), '_blank'); else Copilot.open(`Prépare le message « suite à votre visite » pour ${contactName(a.rdv.contactId)}.`); }
+  else if (a.action === 'conf') { if (c?.tel) window.open(waLink(c.tel, confirmationVisiteTexte(a.rdv)), '_blank'); }
+  db.automations[key] = nowISO(); save(); render();
+}
+
+/* ---------- Agenda (jour / semaine / mois) ---------- */
+const agenda = { mode: 'semaine', ref: new Date() };
+const RDV_COLORS = { 'Visite': 'var(--primary)', 'Estimation': 'var(--accent)', 'Signature mandat': '#7c5cff', 'Signature compromis': '#d98a00', 'Acte authentique': '#1a9a5c', 'Rendez-vous acquéreur': '#2f80ed', 'Appel': '#8a94a6', 'Autre': '#8a94a6' };
+const dayISO = (d) => new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+const startOfWeek = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
+function agendaWidget(compact = false) {
+  const H0 = 7, H1 = 21, mode = agenda.mode;
+  let days = [];
+  if (mode === 'jour') { const d = new Date(agenda.ref); d.setHours(0, 0, 0, 0); days = [d]; }
+  else { const s0 = startOfWeek(agenda.ref); days = Array.from({ length: 7 }, (_, i) => { const d = new Date(s0); d.setDate(d.getDate() + i); return d; }); }
+  const fmtR = (d, o) => d.toLocaleDateString('fr-FR', o);
+  let range;
+  if (mode === 'mois') range = fmtR(agenda.ref, { month: 'long', year: 'numeric' });
+  else if (mode === 'jour') range = fmtR(days[0], { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  else range = `${days[0].getDate()} – ${fmtR(days[6], { day: 'numeric', month: 'long', year: 'numeric' })}`;
+  const head = `<div class="ag-head"><span class="auto-head"><span class="pic">${icon('calendar', 22)}</span></span><h3>Agenda</h3>
+    <button class="round-btn" data-ag-nav="-1" aria-label="Précédent">${icon('chevL', 18)}</button><button class="round-btn" data-ag-nav="1" aria-label="Suivant">${icon('chevR', 18)}</button>
+    <span class="ag-range cap">${esc(range)}</span><button class="btn small ghost" data-ag-today>Aujourd'hui</button><span class="spacer"></span>
+    <div class="seg">${['jour', 'semaine', 'mois'].map(m => `<button class="btn small ${mode === m ? 'on' : ''}" data-ag-mode="${m}">${m[0].toUpperCase() + m.slice(1)}</button>`).join('')}</div>
+    ${Google.isConnected() ? `<button class="round-btn lg" id="syncAgenda" title="Voir mon Google Agenda">${icon('refresh', 20)}</button>` : ''}
+    ${askBtnRound()}
+    <button class="round-btn lg" data-new="rdv" title="Nouveau rendez-vous">${icon('plus', 22)}</button></div><div id="gcal"></div>`;
+  if (mode === 'mois') {
+    const first = new Date(agenda.ref.getFullYear(), agenda.ref.getMonth(), 1), s0 = startOfWeek(first);
+    const cells = Array.from({ length: 42 }, (_, i) => { const d = new Date(s0); d.setDate(d.getDate() + i); return d; });
+    return head + `<div class="ag-month">${['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map(x => `<div class="muted" style="text-align:center;font-weight:700">${x}</div>`).join('')}
+      ${cells.map(d => { const iso = dayISO(d); const evs = db.rdv.filter(r => r.date.startsWith(iso)).sort((a, b) => a.date.localeCompare(b.date));
+        return `<div class="cell ${d.getMonth() !== first.getMonth() ? 'out' : ''} ${iso === todayISO() ? 'today' : ''}" data-ag-slot="${iso}T09:00"><span class="n">${d.getDate()}</span>${evs.slice(0, 3).map(r => `<span class="mev" style="--c:${RDV_COLORS[r.type] || 'var(--primary)'}" data-coll="rdv" data-id="${r.id}">${r.date.slice(11, 16)} ${esc(contactName(r.contactId) || r.type)}</span>`).join('')}${evs.length > 3 ? `<span class="muted">+${evs.length - 3}</span>` : ''}</div>`; }).join('')}</div>`;
+  }
+  const now = new Date();
+  return head + `<div style="--cols:${days.length}"><div class="ag-days"><div></div>${days.map(d => `<div class="${dayISO(d) === todayISO() ? 'today' : ''}"><small>${d.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', '').toUpperCase()}</small><b>${d.getDate()}</b></div>`).join('')}</div>
+    <div class="ag-body" id="agBody" style="${compact ? 'height:420px' : ''}"><div class="ag-hours">${Array.from({ length: H1 - H0 }, (_, i) => `<div>${String(H0 + i).padStart(2, '0')}:00</div>`).join('')}</div>
+    ${days.map(d => { const iso = dayISO(d);
+      const evs = db.rdv.filter(r => r.date.startsWith(iso));
+      return `<div class="ag-col ${iso === todayISO() ? 'today' : ''}" data-ag-day="${iso}" style="height:${(H1 - H0) * 60}px">
+        ${iso === todayISO() && now.getHours() >= H0 && now.getHours() < H1 ? `<div class="ag-now" style="top:${(now.getHours() - H0) * 60 + now.getMinutes()}px"></div>` : ''}
+        ${evs.map(r => { const [h, m] = r.date.slice(11, 16).split(':').map(Number); const top = Math.max(0, (h - H0) * 60 + m); const ht = Math.max(28, Number(r.duree) || 60);
+          return `<div class="ag-ev" style="top:${top}px;height:${ht}px;--c:${RDV_COLORS[r.type] || 'var(--primary)'}" data-coll="rdv" data-id="${r.id}" title="${esc(r.type)}">${r.date.slice(11, 16)}<b>${esc(getContact(r.contactId)?.nom || r.type)}</b>${ht >= 50 ? `<span class="muted">${esc(r.type)}${r.bienId ? ' · ' + esc(getBien(r.bienId)?.ville || '') : ''}</span>` : ''}</div>`; }).join('')}
+      </div>`; }).join('')}</div></div>`;
+}
+const askBtnRound = () => `<button class="round-btn lg fill" data-ask="Prépare les messages WhatsApp de confirmation pour mes rendez-vous de demain, et génère les bons de visite manquants (modèle officiel s'il existe)." title="Confirmer les rendez-vous de demain">${icon('send', 20)}</button>`;
+function scrollAgenda() { const b = $('#agBody'); if (b) b.scrollTop = Math.max(0, (Math.max(new Date().getHours(), 8) - 8) * 60); }
+
+/* ---------- Cockpit ---------- */
+let prioPage = 0;
 views.dashboard = () => {
+  const h = new Date().getHours();
+  const salut = h < 5 || h >= 18 ? 'Bonsoir' : 'Bonjour';
+  const prenom = (db.settings.nom || '').split(' ')[0];
+  const prios = priorites(), autos = automationsDuJour();
+  const rdvJour = db.rdv.filter(r => r.date.startsWith(todayISO()));
+  const rappels = db.taches.filter(t => !t.fait && t.echeance && t.echeance <= todayISO());
   const year = new Date().getFullYear();
-  const actifs = db.biens.filter(b => ETAPES_ACTIVES.includes(b.etape));
   const encaisse = db.ventes.filter(v => v.statut === 'Honoraires encaissés' && (v.dateEncaissement || v.dateActe || '').startsWith(year)).reduce((s, v) => s + commission(v).net, 0);
-  const previsionnel = db.ventes.filter(v => ['Offre acceptée', 'Compromis signé', 'Acte signé'].includes(v.statut)).reduce((s, v) => s + commission(v).net, 0);
   const objectif = Number(db.settings.objectifAnnuel) || 0;
-  const pct = objectif ? Math.min(100, Math.round(encaisse / objectif * 100)) : 0;
-  const prochainsRdv = db.rdv.filter(r => r.date.slice(0, 10) >= todayISO()).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
-  const taches = db.taches.filter(t => !t.fait).sort((a, b) => (a.echeance || '9999').localeCompare(b.echeance || '9999')).slice(0, 6);
-  const al = alertes(), anniv = anniversaires(7), rel = relances(21);
   return `
-  <div class="toolbar"><h2>Bonjour${db.settings.nom ? ' ' + esc(db.settings.nom.split(' ')[0]) : ''} 👋</h2>${askBtn('Mon briefing du jour', 'Fais-moi mon briefing du jour, priorisé par urgence, avec les actions concrètes à mener.')}</div>
-  <div class="grid kpis">
-    <a class="card kpi" href="#dossiers"><div class="label">Mandats en cours</div><div class="value">${actifs.length}</div><div class="muted">${actifs.filter(b => b.mandat === 'Exclusif').length} exclusif(s) · ${db.biens.filter(b => b.etape === 'Estimation').length} estimation(s)</div></a>
-    <a class="card kpi" href="#offres"><div class="label">Offres à traiter</div><div class="value">${db.offres.filter(o => ['Reçue', 'Contre-proposition'].includes(o.statut)).length}</div><div class="muted">${db.biens.filter(b => b.etape === 'Sous compromis').length} dossier(s) sous compromis</div></a>
-    <a class="card kpi" href="#ventes"><div class="label">Commissions encaissées ${year}</div><div class="value">${eur(encaisse)}</div>${objectif ? `<div class="bar"><span style="width:${pct}%"></span></div><div class="muted">${pct}% de l'objectif</div>` : ''}</a>
-    <a class="card kpi" href="#ventes"><div class="label">Commissions à venir</div><div class="value">${eur(previsionnel)}</div><div class="muted">offres & compromis</div></a>
-  </div>
-  ${al.length ? `<div class="card mb"><h3>⚠️ Urgences & échéances</h3><ul class="list">${al.map(a => `<li><span class="dot ${a.niveau}"></span><a href="${a.href}">${esc(a.txt)}</a></li>`).join('')}</ul></div>` : ''}
-  <div class="grid two-cols">
-    <div class="card"><h3>📅 Prochains rendez-vous</h3>
-      ${prochainsRdv.length ? `<ul class="list">${prochainsRdv.map(r => rdvLi(r)).join('')}</ul>` : '<div class="empty">Aucun rendez-vous prévu.</div>'}
-      <button class="btn small" data-new="rdv">+ Rendez-vous</button></div>
-    <div class="card"><h3>✅ Tâches</h3>
-      ${taches.length ? `<ul class="list">${taches.map(t => tacheLi(t)).join('')}</ul>` : '<div class="empty">Rien à faire, bravo !</div>'}
-      <button class="btn small" data-new="taches">+ Tâche</button></div>
-    <div class="card"><h3>📞 À relancer</h3>
-      ${rel.length ? `<ul class="list">${rel.slice(0, 6).map(c => `<li><a href="#contact/${c.id}" style="flex:1">${esc(c.nom)} <span class="muted">${esc(c.type || '')} · ${c.dernierEchange ? 'dernier échange ' + fmtDate(c.dernierEchange) : 'jamais relancé'}</span></a>${c.tel ? `<a class="btn small" target="_blank" href="${waLink(c.tel, `Bonjour ${getContact(c.id).prenom || ''}, `)}">WhatsApp</a>` : ''}</li>`).join('')}</ul>` : '<div class="empty">Personne à relancer.</div>'}
-      ${rel.length ? askBtn('Préparer les relances', 'Identifie les clients à relancer et prépare pour chacun un message WhatsApp personnalisé selon son dossier.') : ''}</div>
-    <div class="card"><h3>🎂 Anniversaires (7 jours)</h3>
-      ${anniv.length ? `<ul class="list">${anniv.map(a => `<li><span style="flex:1"><a href="#contact/${a.id}">${esc(a.nom)}</a> <span class="muted">${a.dans === 0 ? "aujourd'hui" : a.date}</span></span>${a.tel ? `<a class="btn small" target="_blank" href="${waLink(a.tel, `Joyeux anniversaire ${getContact(a.id).prenom || ''} ! 🎉 Je vous souhaite une très belle journée. ${db.settings.nom || ''}`)}">Souhaiter</a>` : ''}</li>`).join('')}</ul>` : '<div class="empty">Aucun anniversaire cette semaine.</div>'}</div>
-  </div>
-  <h3 class="mt">Avancement des dossiers</h3>${pipeline()}`;
+  <section class="card cockpit">
+    <div style="flex:1;min-width:0">
+      <div><span class="tag">Cockpit</span><h2>${salut}${prenom ? ' ' + esc(prenom) : ''}, <em>voici ce qui mérite votre attention aujourd'hui</em> <span style="color:var(--accent)">✦</span></h2></div>
+      <div class="cockpit-stats">
+        <a class="cstat" href="#dashboard" data-scroll="prio"><span class="circle accent">${icon('target', 22)}</span><div><b>${prios.length}</b><span>priorités</span></div></a>
+        <a class="cstat" href="#agenda"><span class="circle">${icon('calendar', 22)}</span><div><b>${rdvJour.length}</b><span>rendez-vous</span></div></a>
+        <span class="cstat"><span class="circle">${icon('bolt', 22)}</span><div><b>${autos.filter(a => !a.fait).length}</b><span>automatisations aujourd'hui</span></div></span>
+        <a class="cstat" href="#ventes"><span class="circle">${icon('euro', 22)}</span><div><b>${eur(encaisse)}</b><span>${objectif ? Math.min(100, Math.round(encaisse / objectif * 100)) + ' % de l\'objectif' : 'encaissés en ' + year}</span></div></a>
+      </div>
+    </div>
+    <div class="peek" data-ask="Fais-moi mon briefing du jour, priorisé par urgence, avec les actions concrètes à mener." title="Mon briefing du jour" style="cursor:pointer">${mascot(108)}</div>
+  </section>
+  <div class="dash-grid">
+    <div class="dash-col">
+      <section class="card" id="prio">
+        <div class="head-row"><h3>Vos priorités du jour</h3><span class="count">${prios.length}</span><span class="spacer"></span>
+          ${prios.length > 2 ? `<span class="muted">${Math.min(prioPage * 2 + 1, prios.length)}–${Math.min(prioPage * 2 + 2, prios.length)} sur ${prios.length}</span>
+          <button class="round-btn" data-prio="-1" aria-label="Précédent">${icon('chevL', 16)}</button><button class="round-btn" data-prio="1" aria-label="Suivant">${icon('chevR', 16)}</button>` : ''}
+          <a class="link-more" href="#taches">Tout voir ${icon('arrowR', 18)}</a></div>
+        ${prios.length ? `<div class="prio-track" id="prioTrack">${prios.map(p => `<a class="prio-card ${p.hot ? 'hot' : ''}" href="${p.href}"><span class="pic">${icon(p.icon, 22)}</span><div style="min-width:0"><strong>${esc(p.titre)}</strong><div class="sub">${esc(p.sub)}</div></div><span class="round-btn go">${icon('arrowR', 18)}</span></a>`).join('')}</div>`
+          : `<div class="empty">Tout est à jour, bravo ! ✨</div>`}
+      </section>
+      <section class="card">${agendaWidget(true)}</section>
+    </div>
+    <div class="dash-col">
+      <section class="card">
+        <div class="auto-head"><span class="pic">${icon('bolt', 22)}</span><h3 style="margin:0">Automatisations du jour</h3></div>
+        <div class="timeline">
+          <div class="tl-now">${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}<i></i></div>
+          ${autos.length ? autos.map(a => `<div class="tl-item"><time>${a.when.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</time><span class="tl-dot"></span>
+            <div class="tl-card">${mascot(40, a.action === 'suite' ? 'wink' : 'happy')}<div><small>${esc(appName())}</small><strong>${esc(a.titre)}</strong><div class="sub">${esc(a.sub)}</div>
+              <button class="badge ${a.fait ? 'grey' : a.passe ? 'warn' : 'ok'}" data-auto="${a.key}">${a.fait ? 'Fait ✓' : a.passe ? 'À lancer maintenant' : 'Programmé · lancer'}</button></div></div></div>`).join('')
+          : '<div class="empty">Aucune automatisation aujourd\'hui. Elles apparaissent pour vos visites (bon de visite, suite de visite) et vos rendez-vous du lendemain (confirmation).</div>'}
+        </div>
+      </section>
+      <section class="card">
+        ${rappels.length ? `<div class="head-row"><h3>Rappels à échéance</h3><span class="count">${rappels.length}</span></div><ul class="list">${rappels.slice(0, 5).map(tacheLi).join('')}</ul>`
+          : `<div class="remind"><span class="pic">${icon('bell', 22)}</span><div style="flex:1"><strong>Aucun rappel à échéance</strong><div class="muted">${esc(appName())} vous préviendra ici.</div></div><button class="round-btn lg" data-new="taches" title="Nouveau rappel">${icon('plus', 22)}</button></div>`}
+      </section>
+      <section class="card">
+        <div class="head-row"><h3>Avancement des mandats</h3></div>
+        <ul class="list">${ETAPES.filter(e => e !== 'Retiré').map(e => { const n = db.biens.filter(b => b.etape === e).length; return `<li><span style="flex:1">${esc(e)}</span><span class="count">${n}</span></li>`; }).join('')}</ul>
+        <a class="link-more mt" href="#dossiers">Voir les dossiers ${icon('arrowR', 18)}</a>
+      </section>
+    </div>
+  </div>`;
 };
 
 const rdvLi = (r) => `<li data-coll="rdv" data-id="${r.id}" class="clickable"><span class="badge">${esc(r.type)}</span><div style="flex:1"><div>${esc(contactName(r.contactId) || bienName(r.bienId) || r.lieu || '—')}${r.bienId && r.contactId ? ` <span class="muted">· ${esc(bienName(r.bienId))}</span>` : ''}</div><div class="muted">${fmtDateTime(r.date)}</div></div>${getContact(r.contactId)?.tel ? `<a class="btn small" data-stop target="_blank" href="${waLink(getContact(r.contactId).tel, confirmationVisiteTexte(r))}" title="Confirmer par WhatsApp">🟢</a>` : ''}</li>`;
@@ -547,17 +660,9 @@ function viewContact(id) {
 }
 
 /* ---------- Agenda / tâches / offres / recherches / locations / ventes ---------- */
-views.agenda = () => {
-  const past = filters.agendaPast;
-  const rows = db.rdv.filter(r => (past || r.date.slice(0, 10) >= todayISO()) && matchSearch(r)).sort((a, b) => past ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
-  const groups = {}; rows.forEach(r => (groups[r.date.slice(0, 10)] ||= []).push(r));
-  return `<div class="toolbar"><h2>Agenda</h2><label class="muted"><input type="checkbox" id="pastToggle"${past ? ' checked' : ''}> Historique</label>
-    ${Google.isConnected() ? `<button class="btn" id="syncAgenda">Voir mon Google Agenda</button>` : ''}
-    ${askBtn('Confirmer les visites de demain', 'Prépare les messages WhatsApp de confirmation pour tous mes rendez-vous de demain, et génère les bons de visite manquants.')}
-    <button class="btn primary" data-new="rdv">+ Rendez-vous</button></div>
-  <div id="gcal"></div>
-  ${rows.length ? Object.entries(groups).map(([day, items]) => `<div class="card mb"><h3 class="cap">${new Date(day).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</h3><ul class="list">${items.map(rdvLi).join('')}</ul></div>`).join('') : '<div class="card empty">Aucun rendez-vous.</div>'}`;
-};
+views.agenda = () => `<div class="toolbar"><h2>Agenda</h2>${askBtn('Confirmer les visites de demain', 'Prépare les messages WhatsApp de confirmation pour tous mes rendez-vous de demain, et génère les bons de visite manquants.')}</div>
+  <section class="card mb">${agendaWidget(false)}</section>
+  <section class="card"><h3>Prochains rendez-vous</h3>${(() => { const r = db.rdv.filter(r => r.date.slice(0, 10) >= todayISO()).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 12); return r.length ? `<ul class="list">${r.map(rdvLi).join('')}</ul>` : '<div class="empty">Aucun rendez-vous à venir.</div>'; })()}</section>`;
 
 views.taches = () => {
   const done = filters.tachesDone;
@@ -605,6 +710,13 @@ views.ventes = () => {
 
 views.copilote = () => { setTimeout(() => Copilot.open(), 0); return views.dashboard(); };
 
+views.modeles = () => `<div class="toolbar"><h2>Modèles officiels</h2></div>
+  <div class="warn-box mb">Déposez ici les <strong>modèles officiels de votre réseau</strong> (PDF téléchargés depuis vos outils réseau : bon de visite, mandats, offre d'achat, fiches de vigilance…). ${esc(appName())} les utilisera en priorité : s'ils contiennent des champs à remplir, ils sont pré-remplis automatiquement avec les informations du dossier ; sinon, ils sont joints tels quels.</div>
+  <div class="tpl-grid">${MODELE_TYPES.map(t => { const m = findModele(t); return `<div class="card tpl"><div class="ttl"><span class="pic">${icon('doc', 20)}</span>${esc(t)}</div>
+    ${m ? `<div class="muted">${esc(m.nom)} · ajouté le ${fmtDate(m.date)}${m.nbChamps != null ? ` · ${m.nbChamps ? m.nbChamps + ' champ(s) remplissable(s)' : 'sans champ remplissable'}` : ''}</div>
+      <div class="actions-wrap"><button class="btn small" data-open-file="${m.fileId}">Ouvrir</button><label class="btn small">Remplacer<input type="file" accept="application/pdf" hidden data-upload-modele="${esc(t)}"></label><button class="btn small ghost" data-rm-modele="${m.id}">Retirer</button></div>`
+      : `<div class="muted">Aucun modèle déposé${t === 'Bon de visite' ? ' : un bon de visite à votre image est généré à la place.' : '.'}</div><label class="btn small primary" style="align-self:flex-start">Déposer le PDF<input type="file" accept="application/pdf" hidden data-upload-modele="${esc(t)}"></label>`}</div>`; }).join('')}</div>`;
+
 views.parametres = () => {
   const s = db.settings;
   return `<h2>Paramètres</h2><div class="grid two-cols">
@@ -618,7 +730,17 @@ views.parametres = () => {
     <label>Taux de commission (%)<input type="number" step="0.1" name="tauxCommission" value="${esc(s.tauxCommission)}"></label>
     <label>TVA (%)<input type="number" step="0.1" name="tva" value="${esc(s.tva)}"></label>
     <label class="full">Objectif annuel de commissions (€ HT)<input type="number" name="objectifAnnuel" value="${esc(s.objectifAnnuel)}"></label>
-    <div class="section">Copilote (Claude)</div>
+    <div class="section">Mon identité sur les documents</div>
+    <p class="muted full">Recopiez ces informations depuis vos documents officiels : elles apparaissent en pied de page de tous les documents générés.</p>
+    <label class="full">Statut<input name="statutPro" value="${esc(s.statutPro)}"></label>
+    <label>Réseau<input name="reseau" value="${esc(s.reseau)}" placeholder="Nom de votre réseau"></label>
+    <label>Couleur des documents<input type="color" name="docColor" value="${esc(s.docColor || (THEMES[s.theme] || THEMES.emeraude).primary)}"></label>
+    <label class="full">Mention du réseau (telle qu'elle figure sur vos documents officiels)<textarea name="mentionReseau" rows="2" placeholder="ex. : Agent commercial de la société … , titulaire de la carte professionnelle n° … délivrée par la CCI de …">${esc(s.mentionReseau)}</textarea></label>
+    <label>N° RSAC<input name="rsac" value="${esc(s.rsac)}"></label>
+    <label>Ville du RSAC<input name="rsacVille" value="${esc(s.rsacVille)}"></label>
+    <label class="full">Assurance RCP (compagnie, n° de contrat)<input name="assurance" value="${esc(s.assurance)}"></label>
+    <label class="full">Adresse professionnelle<input name="adressePro" value="${esc(s.adressePro)}"></label>
+    <div class="section">Assistant (Claude)</div>
     <label class="full">Clé API Claude<input type="password" name="apiKey" value="${esc(s.apiKey)}" placeholder="sk-ant-…" autocomplete="off"></label>
     <p class="muted full">Créez une clé sur console.anthropic.com (facturation à l'usage). Elle reste enregistrée dans ce navigateur uniquement.</p>
     <div class="section">Google (Gmail, Agenda, Drive)</div>
@@ -626,6 +748,16 @@ views.parametres = () => {
     <div class="full"><button class="btn primary">Enregistrer</button></div>
   </form>
   <div>
+    <div class="card mb"><h3>Apparence</h3>
+      <label class="muted">Nom de l'application<input id="appNameInput" value="${esc(appName())}" style="margin:6px 0 12px"></label>
+      <div class="muted" style="margin-bottom:6px">Couleurs</div>
+      <div class="swatches">${Object.entries(THEMES).map(([k, t]) => `<button class="swatch ${(s.theme || 'emeraude') === k ? 'on' : ''}" data-theme-pick="${k}"><i style="background:linear-gradient(135deg, ${t.primary} 50%, ${t.accent} 50%)"></i>${esc(t.label)}</button>`).join('')}</div>
+      <div class="actions-wrap mt">
+        <label class="btn small">🖼️ Mon logo (documents)<input type="file" accept="image/png,image/jpeg" hidden data-upload-brand="logoFileId"></label>
+        <label class="btn small">🙂 Ma photo<input type="file" accept="image/*" hidden data-upload-brand="photoFileId"></label>
+        ${s.logoFileId ? '<button class="btn small ghost" data-rm-brand="logoFileId">Retirer le logo</button>' : ''}
+        <button class="btn small" id="testDoc">Aperçu d'un document</button></div>
+      <p class="muted">Logo : utilisez uniquement un logo que vous êtes autorisée à apposer (celui fourni par votre réseau pour vos documents, ou le vôtre).</p></div>
     <div class="card mb"><h3>Connexions</h3>
       <ul class="list">
         <li><span style="flex:1">✨ Copilote</span>${s.apiKey ? '<span class="badge ok">Activé</span>' : '<span class="badge grey">Clé manquante</span>'}</li>
@@ -657,11 +789,24 @@ function render() {
   photoUrls.forEach(URL.revokeObjectURL); photoUrls = [];
   $('#main').innerHTML = v === 'dossier' ? viewDossier(id, tab) : v === 'contact' ? viewContact(id) : (views[v] || views.dashboard)();
   const navKey = v === 'dossier' ? 'dossiers' : v === 'contact' ? 'contacts' : v;
-  document.querySelectorAll('.sidebar a').forEach(a => a.classList.toggle('active', a.dataset.view === navKey));
+  document.querySelectorAll('.rail-links a').forEach(a => a.classList.toggle('active', a.dataset.view === navKey));
   $('#sidebar').classList.remove('open');
   loadImages();
   if (v === 'parametres') storageInfo();
+  if (v === 'dashboard' || v === 'agenda') scrollAgenda();
 }
+/* Habillage : icônes, mascotte, photo */
+async function initChrome() {
+  document.querySelectorAll('.rail-links a').forEach(a => { if (!a.dataset.label) { a.dataset.label = a.textContent.trim(); a.innerHTML = icon(a.dataset.icon, 23) + `<span>${esc(a.dataset.label)}</span>`; } });
+  $('#railLogo').innerHTML = mascot(52);
+  $('#cpMascot').innerHTML = mascot(30);
+  $('#menuBtn').innerHTML = icon('menu', 22); $('#searchIc').innerHTML = icon('search', 20);
+  $('#cpToggleIc').innerHTML = mascot(26); $('#bellBtn').innerHTML = icon('bell', 22); $('#gearBtn').innerHTML = icon('gear', 22);
+  const av = $('#railAvatar'); av.textContent = initials(db.settings.nom);
+  if (db.settings.photoFileId) { const f = await Files.get(db.settings.photoFileId); if (f) av.innerHTML = `<img alt="Ma photo" src="${URL.createObjectURL(f.blob)}">`; }
+  applyTheme();
+}
+document.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); $('#globalSearch').focus(); } });
 const refreshMain = () => { if (!modal.open) render(); };
 async function loadImages() {
   for (const img of document.querySelectorAll('img[data-img]')) {
@@ -677,6 +822,7 @@ async function storageInfo() {
 }
 window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
 $('#menuBtn').onclick = () => $('#sidebar').classList.toggle('open');
+$('#railOrb').onclick = () => Copilot.open();
 $('#globalSearch').addEventListener('input', () => { if (!['contacts', 'dossiers', 'agenda', 'taches', 'offres', 'ventes', 'recherches', 'locations'].includes(route().v)) location.hash = 'contacts'; else render(); });
 
 /* ---------- Événements ---------- */
@@ -696,7 +842,20 @@ document.addEventListener('click', async (e) => {
   const pf = t.closest('[data-photo-first]'); if (pf) { const b = getBien($('#gallery').dataset.bien); b.photos = [pf.dataset.photoFirst, ...b.photos.filter(x => x !== pf.dataset.photoFirst)]; save(); render(); return; }
   const rmn = t.closest('[data-rm-note]'); if (rmn) { const b = getBien(rmn.dataset.bien); b.notes = b.notes.filter(x => x.id !== rmn.dataset.rmNote); save(); render(); return; }
   const sm = t.closest('[data-save-memoire]'); if (sm) { getBien(sm.dataset.saveMemoire).memoire = $(`[data-memoire="${sm.dataset.saveMemoire}"]`).value; save(); sm.textContent = 'Enregistré ✓'; return; }
-  const bon = t.closest('[data-bon]'); if (bon) { e.stopPropagation(); const r = db.rdv.find(x => x.id === bon.dataset.bon); const doc = await attachToBien(r.bienId, bonDeVisitePdf(r), `Bon de visite - ${contactName(r.contactId) || 'visiteur'} - ${r.date.slice(0, 10)}.pdf`, 'Visites'); r.bonDocId = doc.id; save(); openFile(doc.fileId); render(); return; }
+  const bon = t.closest('[data-bon]'); if (bon) { e.stopPropagation(); const r = db.rdv.find(x => x.id === bon.dataset.bon); const out = await makeOfficialDoc('Bon de visite', { bienId: r.bienId, rdv: r }); const doc = await attachToBien(r.bienId, out.blob, out.nom, 'Visites'); r.bonDocId = doc.id; save(); openFile(doc.fileId); render(); return; }
+  const au = t.closest('[data-auto]'); if (au) { runAutomation(au.dataset.auto); return; }
+  const pr = t.closest('[data-prio]'); if (pr) { const track = $('#prioTrack'); const n = priorites().length; prioPage = Math.max(0, Math.min(Math.ceil(n / 2) - 1, prioPage + Number(pr.dataset.prio))); track?.children[prioPage * 2]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); const lab = pr.parentElement.querySelector('.muted'); if (lab) lab.textContent = `${prioPage * 2 + 1}–${Math.min(prioPage * 2 + 2, n)} sur ${n}`; return; }
+  const agn = t.closest('[data-ag-nav]'); if (agn) { const d = new Date(agenda.ref), k = Number(agn.dataset.agNav); if (agenda.mode === 'mois') d.setMonth(d.getMonth() + k); else d.setDate(d.getDate() + k * (agenda.mode === 'jour' ? 1 : 7)); agenda.ref = d; render(); return; }
+  const agm = t.closest('[data-ag-mode]'); if (agm) { agenda.mode = agm.dataset.agMode; render(); return; }
+  if (t.closest('[data-ag-today]')) { agenda.ref = new Date(); render(); return; }
+  if (!t.closest('[data-coll]')) {
+    const slot = t.closest('[data-ag-slot]'); if (slot) { openForm('rdv', null, { date: slot.dataset.agSlot, type: 'Visite', duree: 60 }); return; }
+    const col = t.closest('[data-ag-day]'); if (col) { const y = e.clientY - col.getBoundingClientRect().top; const mins = Math.round((7 * 60 + y) / 15) * 15; openForm('rdv', null, { date: `${col.dataset.agDay}T${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`, type: 'Visite', duree: 60 }); return; }
+  }
+  const th = t.closest('[data-theme-pick]'); if (th) { db.settings.theme = th.dataset.themePick; db.settings.docColor = ''; save(); applyTheme(); render(); return; }
+  const rmb = t.closest('[data-rm-brand]'); if (rmb) { await Files.del(db.settings[rmb.dataset.rmBrand]).catch(() => { }); db.settings[rmb.dataset.rmBrand] = ''; save(); render(); initChrome(); return; }
+  const rmm = t.closest('[data-rm-modele]'); if (rmm) { const m = db.modeles.find(x => x.id === rmm.dataset.rmModele); if (!confirm(`Retirer le modèle « ${m.type} » ?`)) return; await Files.del(m.fileId).catch(() => { }); db.modeles = db.modeles.filter(x => x !== m); save(); render(); return; }
+  if (t.id === 'testDoc') { const b = await textPdf('Aperçu de document', '## Exemple de titre\nVoici l\'apparence de vos documents générés : logo, couleur et mentions professionnelles en pied de page.\n\nCompletez votre identité dans le formulaire pour qu\'elle apparaisse ci-dessous.', { signatures: ['Le client', 'Le conseiller'] }); const u = URL.createObjectURL(b); window.open(u, '_blank'); return; }
   const as = t.closest('[data-add-sel]'); if (as) { e.stopPropagation(); db.selections.push({ id: uid(), date: todayISO(), contactId: as.dataset.addSel, bienId: as.dataset.bien, statut: 'À proposer' }); save(); render(); return; }
   const pc = t.closest('[data-pieces]'); if (pc) { e.stopPropagation(); editPieces(pc.dataset.pieces); return; }
   const mg = t.closest('[data-merge]'); if (mg) { if (!confirm(`Fusionner « ${contactName(mg.dataset.merge)} » dans « ${contactName(mg.dataset.keep)} » ? Les dossiers, visites et offres seront rattachés à cette fiche.`)) return; mergeContacts(mg.dataset.keep, mg.dataset.merge); render(); return; }
@@ -729,13 +888,21 @@ document.addEventListener('change', async (e) => {
     addHistorique(b, `${t.files.length} photo(s) ajoutée(s)`); save(); render();
   }
   if (t.id === 'importInput' && t.files[0]) importAll(t.files[0]);
+  if (t.id === 'appNameInput') { db.settings.appName = t.value.trim() || 'Hestia'; save(); applyTheme(); Copilot.render(); }
+  if (t.dataset.uploadBrand && t.files[0]) { const k = t.dataset.uploadBrand; if (db.settings[k]) await Files.del(db.settings[k]).catch(() => { }); db.settings[k] = await Files.put(await resizeImage(t.files[0], 800), t.files[0].name); save(); render(); initChrome(); }
+  if (t.dataset.uploadModele && t.files[0]) {
+    const type = t.dataset.uploadModele, f = t.files[0], old = findModele(type);
+    if (old) { await Files.del(old.fileId).catch(() => { }); db.modeles = db.modeles.filter(x => x !== old); }
+    let nbChamps = null; try { const pdf = await PDFLib.PDFDocument.load(new Uint8Array(await f.arrayBuffer()), { ignoreEncryption: true }); nbChamps = pdf.getForm().getFields().length; } catch { }
+    db.modeles.push({ id: uid(), type, nom: f.name, fileId: await Files.put(f, f.name), date: nowISO(), nbChamps }); save(); render();
+  }
 });
 
 document.addEventListener('submit', (e) => {
   const f = e.target; if (!f.closest('#main')) return;
   e.preventDefault();
   const fd = Object.fromEntries(new FormData(f));
-  if (f.id === 'settingsForm') { db.settings = { ...db.settings, ...fd }; save(); alert('Paramètres enregistrés'); render(); return; }
+  if (f.id === 'settingsForm') { db.settings = { ...db.settings, ...fd }; save(); initChrome(); alert('Paramètres enregistrés'); render(); return; }
   if (f.dataset.addPartie) { const b = getBien(f.dataset.addPartie); if (!fd.contactId) return; b.parties.push({ contactId: fd.contactId, role: fd.role }); addHistorique(b, `${contactName(fd.contactId)} ajouté(e) : ${fd.role}`); }
   if (f.dataset.addDoc) getBien(f.dataset.addDoc).documents.push({ id: uid(), nom: fd.nom, categorie: fd.categorie, statut: 'Manquant' });
   if (f.dataset.addNote) getBien(f.dataset.addNote).notes.unshift({ id: uid(), date: nowISO(), texte: fd.texte });
@@ -854,4 +1021,5 @@ function loadDemo() {
   db.candidatures.push({ id: uid(), date: day(-1), bienId: b4, contactId: c7, statut: 'Dossier incomplet', revenus: 2100, garant: 'Parents', pieces: { 'Pièce d\'identité': true, '3 derniers bulletins de salaire': true } });
 }
 
+initChrome();
 render();

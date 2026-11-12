@@ -1,4 +1,4 @@
-# Mon Agence – l'outil de la conseillère immobilière, avec copilote IA
+# Hestia – l'outil de la conseillère immobilière, avec son assistante IA
 
 Application pour gérer toute une activité de conseiller·ère immobilier·ère indépendant·e : mandats, vendeurs, acquéreurs, documents, visites, offres, notaires, locations… avec un **copilote** à qui l'on peut tout demander.
 
@@ -21,7 +21,20 @@ Aucune installation : ouvrez `index.html` dans Chrome, Edge ou Safari (ordinateu
 | **Notes & mémoire du bien** | Notes datées et « mémoire » durable que le copilote utilise. |
 | **Honoraires** | Commission nette HT calculée automatiquement, objectif annuel, graphique mensuel. |
 
-## Le copilote ✨
+## Apparence
+
+- Cockpit d'accueil : priorités du jour, agenda (jour / semaine / mois), automatisations du jour (bon de visite avant chaque visite, message « suite à votre visite », confirmations de la veille), rappels.
+- Mascotte maison « Hestia », 4 palettes de couleurs au choix, mode sombre automatique.
+- Le nom de l'application, les couleurs, votre photo et votre logo se changent dans **Paramètres → Apparence**.
+
+## Documents à l'image de votre réseau
+
+1. **Modèles officiels** (menu de gauche) : déposez les PDF officiels de votre réseau (bon de visite, mandats, offre d'achat, fiches de vigilance LCB-FT…). Ils sont utilisés en priorité ; s'ils contiennent des champs remplissables, ils sont **pré-remplis automatiquement** (client, bien, date, prix, n° de mandat…) et restent modifiables.
+2. **Paramètres → Mon identité sur les documents** : statut, réseau, mention légale du réseau, RSAC, assurance, adresse, couleur, logo. Ces informations apparaissent en pied de page de chaque document généré (courriers, bilans, avis…).
+
+L'application n'invente aucune mention légale ni aucun logo : tout vient de vos documents officiels et de ce que vous saisissez.
+
+## L'assistante ✨
 
 Bouton **Copilote** en haut à droite, ou boutons violets ✨ partout dans l'application. Exemples :
 
@@ -79,4 +92,5 @@ Rien à configurer : les boutons ouvrent WhatsApp (ou les SMS) avec le message p
 - `js/copilot.js` : copilote (Claude) et ses outils
 - `js/google.js` : Gmail, Google Agenda, Google Drive
 - `js/documents.js` : PDF (bon de visite, courriers), WhatsApp, SMS, partage
-- `vendor/` : bibliothèques embarquées (SDK Anthropic 1.8.0, jsPDF 2.5.2)
+- `js/brand.js` : nom, mascotte, icônes, palettes de couleurs
+- `vendor/` : bibliothèques embarquées (SDK Anthropic 1.8.0, jsPDF 2.5.2, pdf-lib 1.17.1)

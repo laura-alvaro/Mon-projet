@@ -8,7 +8,7 @@ const Copilot = (() => {
   let chatFiles = {};         // fichiers joints dans le chat : ref -> fileId
   let busy = false;
 
-  const SYSTEM = `Tu es le copilote d'une conseillère immobilière indépendante en France (réseau de mandataires). Tu l'aides à gérer toute son activité : mandats, vendeurs, co-vendeurs, héritiers, acquéreurs, candidats locataires, documents, visites, offres, compromis, notaires, relances et communication.
+  const SYSTEM = `Tu es l'assistant intégré à l'application de gestion d'une conseillère immobilière indépendante en France, membre d'un réseau de mandataires (agent commercial immobilier). Tu l'aides à gérer toute son activité : mandats, vendeurs, co-vendeurs, héritiers, acquéreurs, candidats locataires, documents, visites, offres, compromis, notaires, relances et communication.
 
 Règles de travail :
 - Réponds en français, de façon concise, concrète et chaleureuse. Utilise des listes courtes.
@@ -25,6 +25,8 @@ Règles de travail :
 - Dossier notaire : rassemble les pièces reçues, liste ce qui manque, prépare le mail au notaire avec les pièces jointes du dossier.
 - Contenus de diffusion (annonces, posts, reels, scripts vidéo, stories) : appuie-toi sur les caractéristiques et les photos du bien ; propose accroche, texte, hashtags, plan de tournage plan par plan. Respecte les mentions obligatoires d'une annonce (prix honoraires inclus, part d'honoraires à la charge de l'acquéreur le cas échéant, DPE/GES, copropriété : nombre de lots et charges annuelles, procédures).
 - Recherche acquéreur : utilise les critères des fiches, rapproche avec les biens du portefeuille et, si demandé, cherche sur le web des annonces publiques correspondantes ; enregistre les biens retenus dans la sélection de l'acquéreur.
+- Documents officiels : la conseillère dépose dans « Modèles officiels » les modèles de son réseau (bon de visite, mandats, offre d'achat, fiches de vigilance LCB-FT…). Quand un modèle officiel existe pour un document, utilise-le toujours (outil utiliser_modele_officiel) plutôt que d'en générer un. Sinon, le document généré reprend automatiquement son identité professionnelle (nom, statut, mentions du réseau, RSAC, assurance) saisie dans ses paramètres. N'invente jamais de logo, de numéro, de mention légale ou de clause « officielle » : si une information manque, demande-la.
+- Mandats, offres d'achat et fiches de vigilance sont des actes juridiques : propose le modèle officiel pré-rempli, ne rédige pas toi-même de clauses contractuelles.
 - Le briefing quotidien priorise : urgences du jour, rendez-vous, échéances (fin de mandat, conditions suspensives, actes), offres en attente, pièces manquantes bloquantes, relances, anniversaires.`;
 
   /* ---------- Définition des outils ---------- */
@@ -55,6 +57,8 @@ Règles de travail :
     { name: 'preparer_email', description: 'Prépare un e-mail (jamais envoyé automatiquement). Si Gmail est connecté et creer_brouillon_gmail=true, crée un brouillon Gmail avec les pièces jointes du dossier ; sinon affiche le brouillon avec des boutons.', input_schema: obj({ a: S, cc: S, objet: S, corps: S, pieces_jointes: { type: 'array', items: obj({ bien_id: S, document_id: S }, ['bien_id', 'document_id']) }, creer_brouillon_gmail: B }, ['objet', 'corps']) },
     { name: 'preparer_message', description: 'Prépare un message WhatsApp ou SMS (confirmation de visite, relance, demande de pièces…) avec un bouton d\'envoi en un clic.', input_schema: obj({ contact_id: S, tel: S, texte: S, canal: d('whatsapp ou sms') }, ['texte']) },
     { name: 'generer_bon_de_visite', description: 'Génère le bon de visite PDF pré-rempli d\'un rendez-vous et le range dans le dossier du bien.', input_schema: obj({ rdv_id: S }, ['rdv_id']) },
+    { name: 'utiliser_modele_officiel', description: 'Pré-remplit un modèle officiel déposé par la conseillère (types : ' + MODELE_TYPES.join(', ') + ') avec les informations du dossier, du contact, du rendez-vous ou de l\'offre, et le range dans le dossier. Renvoie les champs remplis et ceux restant à compléter.', input_schema: obj({ type: S, bien_id: S, contact_id: S, rdv_id: S, offre_id: S }, ['type']) },
+    { name: 'lire_modele', description: 'Ouvre un modèle officiel pour en lire le contenu (structure, mentions, champs).', input_schema: obj({ type: S }, ['type']) },
     { name: 'generer_document_pdf', description: 'Crée un document PDF (courrier d\'acceptation/refus/contre-proposition, bilan de commercialisation, avis de valeur, récapitulatif notaire…) et le range dans le dossier. Le contenu accepte des titres "## ".', input_schema: obj({ bien_id: S, titre: S, contenu: S, categorie: S, signatures: { type: 'array', items: S } }, ['bien_id', 'titre', 'contenu']) },
     { name: 'gerer_selection', description: 'Gère la sélection de biens d\'un acquéreur : ajouter un bien du portefeuille (bien_id) ou une annonce externe (externe_titre, externe_url, externe_prix), changer le statut (' + SELECTION_STATUTS.join(', ') + '), date de relance.', input_schema: obj({ selection_id: S, contact_id: S, bien_id: S, externe_titre: S, externe_url: S, externe_prix: N, statut: S, relance: S, commentaire: S }) },
     { name: 'gerer_candidature', description: 'Crée ou met à jour une candidature locative. statut : ' + CANDIDATURE_STATUTS.join(', ') + '. pieces_recues : liste parmi ' + PIECES_CANDIDAT.join(', ') + '.', input_schema: obj({ candidature_id: S, bien_id: S, contact_id: S, statut: S, revenus: N, garant: S, pieces_recues: { type: 'array', items: S }, notes: S }) },
@@ -260,14 +264,27 @@ Règles de travail :
     },
     generer_bon_de_visite: async ({ rdv_id }) => {
       const r = db.rdv.find(x => x.id === rdv_id); if (!r) throw new Error('Rendez-vous introuvable'); if (!r.bienId) throw new Error('Ce rendez-vous n\'est lié à aucun bien');
-      const nom = `Bon de visite - ${contactName(r.contactId) || 'visiteur'} - ${r.date.slice(0, 10)}.pdf`;
-      const doc = await attachToBien(r.bienId, bonDeVisitePdf(r), nom, 'Visites');
+      const out = await makeOfficialDoc('Bon de visite', { bienId: r.bienId, rdv: r });
+      const doc = await attachToBien(r.bienId, out.blob, out.nom, 'Visites');
       r.bonDocId = doc.id; save();
       card(fileCard(doc));
-      return { ok: true, bien_id: r.bienId, document_id: doc.id };
+      return { ok: true, bien_id: r.bienId, document_id: doc.id, modeleOfficiel: out.officiel, champsAcompleter: out.vides };
     },
+    utiliser_modele_officiel: async ({ type, bien_id, contact_id, rdv_id, offre_id }) => {
+      if (!findModele(type)) throw new Error(`Aucun modèle officiel « ${type} » n'a été déposé. Proposer à la conseillère de l'ajouter dans « Modèles officiels ».`);
+      const rdv = rdv_id && db.rdv.find(x => x.id === rdv_id), offre = offre_id && db.offres.find(x => x.id === offre_id);
+      const bienId = bien_id || rdv?.bienId || offre?.bienId;
+      const out = await makeOfficialDoc(type, { bienId, rdv, contactId: contact_id, offre });
+      if (!bienId) { downloadBlob(out.nom, out.blob); return { ok: true, info: 'Aucun dossier lié : document téléchargé', remplis: out.remplis, aCompleter: out.vides }; }
+      const doc = await attachToBien(bienId, out.blob, out.nom, type.startsWith('Fiche de vigilance') ? (type.includes('acquéreur') ? 'Acquéreur' : 'Vendeur') : 'Autre',
+        type === 'Fiche de vigilance vendeur' ? 'Fiche de vigilance vendeur (LCB-FT)' : type === 'Fiche de vigilance acquéreur' ? 'Fiche de vigilance acquéreur (LCB-FT)' : undefined);
+      if (rdv && type === 'Bon de visite') { rdv.bonDocId = doc.id; save(); }
+      card(fileCard(doc));
+      return { ok: true, document_id: doc.id, nbChamps: out.nbChamps, remplis: out.remplis, aCompleter: out.vides, info: out.nbChamps ? '' : 'Ce modèle ne contient pas de champs remplissables : il est joint vierge, à compléter à la main.' };
+    },
+    lire_modele: async ({ type }) => { const m = findModele(type); if (!m) throw new Error('Modèle non déposé'); return fileToBlocks(m.fileId, `Modèle officiel « ${type} »`); },
     generer_document_pdf: async ({ bien_id, titre, contenu, categorie, signatures }) => {
-      const doc = await attachToBien(bien_id, textPdf(titre, contenu, { signatures }), `${titre}.pdf`, categorie || 'Autre');
+      const doc = await attachToBien(bien_id, await textPdf(titre, contenu, { signatures }), `${titre}.pdf`, categorie || 'Autre');
       card(fileCard(doc)); return { ok: true, document_id: doc.id };
     },
     gerer_selection: ({ selection_id, contact_id, bien_id, externe_titre, externe_url, externe_prix, statut, relance, commentaire }) => {
@@ -331,7 +348,7 @@ Règles de travail :
   }
 
   function contextBlock() {
-    return `Contexte : nous sommes le ${new Date().toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}. Conseillère : ${db.settings.nom || 'non renseigné'} (${db.settings.email || 'e-mail non renseigné'}). Google : ${Google.isConnected() ? 'connecté (Gmail, Agenda, Drive)' : 'non connecté'}.${db.settings.miniSite ? ` Mini-site / annonces : ${db.settings.miniSite}` : ''} Portefeuille : ${db.biens.length} dossiers, ${db.contacts.length} contacts.`;
+    return `Application : ${appName()}. Modèles officiels déposés : ${db.modeles.map(m => m.type).join(', ') || 'aucun'}. Identité pro : ${mentionsPro().join(' | ') || 'non renseignée'}.\nContexte : nous sommes le ${new Date().toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}. Conseillère : ${db.settings.nom || 'non renseigné'} (${db.settings.email || 'e-mail non renseigné'}). Google : ${Google.isConnected() ? 'connecté (Gmail, Agenda, Drive)' : 'non connecté'}.${db.settings.miniSite ? ` Mini-site / annonces : ${db.settings.miniSite}` : ''} Portefeuille : ${db.biens.length} dossiers, ${db.contacts.length} contacts.`;
   }
 
   async function runTool(block) {
@@ -353,7 +370,7 @@ Règles de travail :
     if (busy) return;
     let api;
     try { api = getClient(); } catch {
-      addBubble('assistant', `<p>Pour activer le copilote, ajoutez votre clé API Claude dans <a href="#parametres">Paramètres</a>.</p>`); render(); return;
+      addBubble('assistant', `<p>Pour m'activer, ajoutez votre clé API Claude dans <a href="#parametres">Paramètres</a>.</p>`); render(); return;
     }
     busy = true;
     const content = [];
@@ -369,7 +386,7 @@ Règles de travail :
     content.push({ type: 'text', text: text + (page ? `\n\n(Page ouverte : ${page})` : '') });
     messages.push({ role: 'user', content });
     addBubble('user', `<p>${esc(text).replace(/\n/g, '<br>')}</p>${refs.length ? `<div class="muted">📎 ${esc(refs.map(r => r.split(' = ')[1]).join(', '))}</div>` : ''}`);
-    const status = addBubble('assistant', '<p class="muted cp-typing">Le copilote réfléchit…</p>');
+    const status = addBubble('assistant', '<p class="muted cp-typing">Je réfléchis…</p>');
     render();
     cards = [];
     try {
@@ -439,7 +456,7 @@ Règles de travail :
   function render() {
     const box = document.getElementById('cpMessages'); if (!box) return;
     box.innerHTML = transcript.length ? transcript.map(b => `<div class="cp-msg ${b.role}">${b.html}</div>`).join('')
-      : `<div class="cp-welcome"><p><strong>Bonjour ! Je suis votre copilote.</strong></p><p class="muted">Posez-moi vos questions sur vos dossiers, demandez-moi un mail, une analyse de diagnostics, un post Instagram…</p>
+      : `<div class="cp-welcome">${mascot(84, 'wink')}<p><strong>Bonjour ! Je suis ${esc(appName())}, votre assistante.</strong></p><p class="muted">Posez-moi vos questions sur vos dossiers, demandez-moi un mail, une analyse de diagnostics, un post Instagram…</p>
         <div class="cp-suggestions">${SUGGESTIONS.map(s => `<button class="btn small" data-suggest="${esc(s)}">${esc(s)}</button>`).join('')}</div></div>`;
     box.scrollTop = box.scrollHeight;
     document.getElementById('cpSend').disabled = busy;

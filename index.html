@@ -2,48 +2,61 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1f5eff">
-  <title>Mon Agence</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e9384">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Hestia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
-    <h1>🏠 Mon Agence</h1>
-    <input type="search" id="globalSearch" placeholder="Rechercher un contact, un dossier…">
-    <button class="btn ai cp-toggle" id="cpToggle">✨ <span>Copilote</span></button>
-  </header>
-  <div class="layout">
-    <nav class="sidebar" id="sidebar">
-      <a href="#dashboard" data-view="dashboard">📊 Tableau de bord</a>
-      <a href="#dossiers" data-view="dossiers">🏡 Dossiers &amp; mandats</a>
-      <a href="#contacts" data-view="contacts">👥 Contacts</a>
-      <a href="#agenda" data-view="agenda">📅 Agenda</a>
-      <a href="#taches" data-view="taches">✅ Tâches &amp; relances</a>
-      <a href="#offres" data-view="offres">📝 Offres d'achat</a>
-      <a href="#recherches" data-view="recherches">🔎 Recherches acquéreurs</a>
-      <a href="#locations" data-view="locations">🔑 Candidatures locatives</a>
-      <a href="#ventes" data-view="ventes">💶 Ventes &amp; honoraires</a>
-      <a href="#parametres" data-view="parametres">⚙️ Paramètres</a>
-    </nav>
-    <main id="main"></main>
-    <aside class="copilot" id="copilot" aria-label="Copilote">
-      <div class="cp-head"><strong>✨ Copilote</strong><span class="spacer"></span>
-        <button class="btn small" id="cpReset" title="Nouvelle conversation">Nouveau</button>
-        <button class="btn small" id="cpClose" aria-label="Fermer">✕</button></div>
-      <div class="cp-messages" id="cpMessages"></div>
-      <form class="cp-input" id="cpForm">
-        <div id="cpFiles" class="muted"></div>
-        <textarea id="cpInput" rows="2" placeholder="Posez votre question, demandez un mail, une analyse…"></textarea>
-        <div class="cp-row">
-          <label class="btn small" title="Joindre un PDF ou une photo">📎<input type="file" id="cpAttach" multiple accept="application/pdf,image/*,text/plain" hidden></label>
-          <button type="button" class="btn small" id="cpMic" title="Dicter">🎤</button>
-          <span class="spacer"></span>
-          <button class="btn primary" id="cpSend">Envoyer</button>
-        </div>
-      </form>
-    </aside>
+  <nav class="rail" id="sidebar" aria-label="Navigation">
+    <a href="#dashboard" class="rail-logo" title="Accueil" id="railLogo"></a>
+    <div class="rail-links">
+      <a href="#dashboard" data-view="dashboard" data-icon="home">Cockpit</a>
+      <a href="#dossiers" data-view="dossiers" data-icon="folder">Dossiers &amp; mandats</a>
+      <a href="#contacts" data-view="contacts" data-icon="users">Contacts</a>
+      <a href="#agenda" data-view="agenda" data-icon="calendar">Agenda</a>
+      <a href="#taches" data-view="taches" data-icon="check">Tâches &amp; relances</a>
+      <a href="#offres" data-view="offres" data-icon="file">Offres d'achat</a>
+      <a href="#recherches" data-view="recherches" data-icon="search">Recherches acquéreurs</a>
+      <a href="#locations" data-view="locations" data-icon="key">Candidatures locatives</a>
+      <a href="#ventes" data-view="ventes" data-icon="euro">Ventes &amp; honoraires</a>
+      <a href="#modeles" data-view="modeles" data-icon="book">Modèles officiels</a>
+    </div>
+    <button class="rail-orb" id="railOrb" title="Parler à l'assistant" aria-label="Assistant"></button>
+    <a href="#parametres" class="rail-avatar" id="railAvatar" title="Mon profil & paramètres"></a>
+  </nav>
+
+  <div class="shell">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"></button>
+      <label class="searchbox"><span id="searchIc"></span><input type="search" id="globalSearch" placeholder="Rechercher un dossier, un client…"><kbd>⌘K</kbd></label>
+      <span class="spacer"></span>
+      <button class="pill pill-accent" id="cpToggle"><span id="cpToggleIc"></span><span>Mon assistant</span></button>
+      <a class="icon-btn" href="#taches" title="Rappels" id="bellBtn"></a>
+      <a class="icon-btn" href="#parametres" title="Paramètres" id="gearBtn"></a>
+    </header>
+    <div class="layout">
+      <main id="main"></main>
+      <aside class="copilot" id="copilot" aria-label="Assistant">
+        <div class="cp-head"><span id="cpMascot"></span><strong data-app-name>Hestia</strong><span class="spacer"></span>
+          <button class="btn small" id="cpReset" title="Nouvelle conversation">Nouveau</button>
+          <button class="btn small" id="cpClose" aria-label="Fermer">✕</button></div>
+        <div class="cp-messages" id="cpMessages"></div>
+        <form class="cp-input" id="cpForm">
+          <div id="cpFiles" class="muted"></div>
+          <textarea id="cpInput" rows="2" placeholder="Posez votre question, demandez un mail, une analyse…"></textarea>
+          <div class="cp-row">
+            <label class="btn small" title="Joindre un PDF ou une photo">📎<input type="file" id="cpAttach" multiple accept="application/pdf,image/*,text/plain" hidden></label>
+            <button type="button" class="btn small" id="cpMic" title="Dicter">🎤</button>
+            <span class="spacer"></span>
+            <button class="btn primary" id="cpSend">Envoyer</button>
+          </div>
+        </form>
+      </aside>
+    </div>
   </div>
 
   <dialog id="modal">
@@ -61,7 +74,9 @@
 
   <script src="vendor/anthropic-sdk.js"></script>
   <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/pdf-lib.min.js"></script>
   <script src="js/store.js"></script>
+  <script src="js/brand.js"></script>
   <script src="js/google.js"></script>
   <script src="js/documents.js"></script>
   <script src="js/copilot.js"></script>

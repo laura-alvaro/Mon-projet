@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Couverture Réel</title>
+<link rel="stylesheet" href="../../charte/brand.css"><script src="../../charte/coordonnees.js"></script>
+<style>
+  /* Tout l'essentiel reste dans la zone centrale 4:5 (y 285 → 1635) visible dans la grille du profil */
+  .canvas { width:1080px; height:1920px; position:relative; overflow:hidden; background: var(--bleu-iad); }
+  .photo-bien { position:absolute; inset:0 0 auto 0; height:1250px; background: url('photos/01-salon.jpg') 40% 30%/cover; }
+  .vague1 { top: 980px; height: 300px; }
+  .bleu { position:absolute; left:0; right:0; top:1150px; bottom:0; background: var(--bleu-iad); }
+  .logo { position:absolute; top: 310px; left: 70px; }
+  .logo .logo-iad { height: 110px; filter: drop-shadow(0 4px 12px rgba(0,0,0,.4)); }
+  .badge { position:absolute; top: 320px; right: 70px; background: var(--corail); color:#fff; font-family: var(--font-titre);
+    font-weight:800; font-style:italic; font-size: 46px; padding: 16px 40px; border-radius: 70px; box-shadow: 0 10px 24px rgba(0,0,0,.3); }
+  .moi { position:absolute; right: 70px; top: 960px; }
+  .moi .photo { width: 230px; height: 230px; border-width: 8px; box-shadow: 0 0 0 5px var(--corail), 0 16px 34px rgba(0,0,0,.3); }
+  .txt { position:absolute; left: 70px; right: 70px; top: 1150px; color:#fff; }
+  .sig { font-family: var(--font-signature); font-style: italic; font-size: 58px; color: var(--bleu-fonce); }
+  h1 { font-family: var(--font-titre); font-weight:800; font-style:italic; font-size: 132px; line-height: .98; margin-top: 4px; }
+  .infos { font-family: var(--font-titre); font-weight: 700; font-style: italic; font-size: 58px; margin-top: 18px; }
+  .prix { display:inline-block; margin-top: 26px; background:#fff; color: var(--corail); font-family: var(--font-titre); font-weight:800;
+    font-size: 70px; padding: 10px 40px; border-radius: 24px; }
+.contact { position:absolute; left:70px; right:70px; top: 1700px; display:flex; align-items:center; gap:18px; color:#fff;
+    font-family: var(--font-texte); font-weight:700; font-size: 40px; }
+  .contact .wa-icone { width: 60px; height: 60px; }
+</style></head>
+<body><div class="canvas">
+  <div class="photo-bien"></div>
+  <div class="bleu"></div>
+  <svg class="vague vague1" viewBox="0 0 1080 220" preserveAspectRatio="none"><path d="M0,190 C300,110 600,40 1080,20 L1080,220 L0,220 Z" fill="#50B1E6"/></svg>
+  <div class="logo"><img class="logo-iad" src="../../assets/logo-iad.png" alt=""></div>
+  <div class="badge">À vendre</div>
+  <div class="moi"><img class="photo" src="../../assets/photo.jpg" alt=""></div>
+  <div class="txt">
+    <div class="sig">Visite à Pompey</div>
+    <h1>Maison T5</h1>
+    <div class="infos">134 m² · 4 chambres</div>
+    <div class="prix">239 000 € FAI</div>
+  </div>
+<div class="contact" data-icone="whatsapp"><span>Laura ALVARO · 07 50 40 80 37</span></div>
+</div></body></html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Overlay</title>
+<link rel="stylesheet" href="../../charte/brand.css">
+<script src="../../charte/coordonnees.js"></script><script src="scenes.js"></script>
+<style>
+  html, body { background: transparent; }
+  .canvas { width: 1080px; height: 1920px; position: relative; overflow: hidden; }
+  /* Zone haute (sous la zone sécurité 250px) */
+  .top { position:absolute; top: 250px; left: 70px; right: 70px; display:flex; justify-content:space-between; align-items:center; }
+  .top .logo-iad { height: 96px; filter: drop-shadow(0 3px 10px rgba(0,0,0,.35)); }
+  .chip { background: var(--corail); color: #fff; font-family: var(--font-titre); font-weight: 800; font-style: italic;
+    font-size: 34px; padding: 14px 32px; border-radius: 60px; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+  /* Carte texte (au-dessus de la zone sécurité basse 340px) */
+  .carte { position:absolute; left: 70px; right: 70px; bottom: 420px; }
+  .badge { display:inline-block; background: var(--corail); color:#fff; font-family: var(--font-titre); font-weight: 800; font-style: italic;
+    font-size: 38px; padding: 12px 34px; border-radius: 60px; position: relative; left: 30px; top: 26px; z-index: 2; }
+  .boite { background: rgba(255,255,255,.96); border-radius: 36px; padding: 52px 50px 40px; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+  .titre { font-family: var(--font-titre); font-weight: 800; font-style: italic; color: var(--bleu-fonce); font-size: 74px; line-height: 1.08; }
+  /* Accroche */
+  .accroche .boite { background: var(--bleu-iad); }
+  .accroche .titre { color:#fff; font-size: 128px; line-height: 1; }
+  .accroche .sous { font-family: var(--font-titre); font-weight: 800; font-style: italic; color: var(--bleu-fonce); font-size: 64px; margin-top: 14px; }
+  .accroche .sig { font-family: var(--font-signature); font-style: italic; color:#fff; font-size: 50px; margin-top: 18px; }
+  /* Récap */
+  .recap .boite { background: var(--bleu-iad); }
+  .recap .titre { color:#fff; font-size: 96px; }
+  .recap .cta { margin-top: 30px; display:inline-flex; align-items:center; gap: 16px; background:#fff; color: var(--corail);
+    font-family: var(--font-titre); font-weight: 800; font-style: italic; font-size: 40px; padding: 18px 38px; border-radius: 60px; }
+  .recap .cta .wa-icone { width: 56px; height: 56px; }
+</style></head>
+<body><div class="canvas" id="c"></div>
+<script>
+  const i = parseInt(location.hash.slice(1) || "0"); const s = SCENES[i];
+  const type = s.type || "piece";
+  let extra = "";
+  if (type === "accroche") extra = `<div class="sous">${s.sous}</div><div class="sig">${s.signature}</div>`;
+  if (type === "recap") extra = `<div class="cta" data-icone="whatsapp">Visite ? Écrivez-moi</div>`;
+  document.getElementById("c").innerHTML = `
+    <div class="top"><img class="logo-iad" src="../../assets/logo-iad.png" alt="">${type==="accroche"?"":'<span class="chip">À vendre</span>'}</div>
+    <div class="carte ${type}"><span class="badge">${s.badge}</span><div class="boite"><div class="titre">${s.titre}</div>${extra}</div></div>`;
+</script></body></html>

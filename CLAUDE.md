@@ -21,6 +21,13 @@ Ce dossier est mon bureau numérique : dossiers clients, suivi, documents, rése
 - Notifications à exploiter : **Playiad** (rapprochements et réponses des acquéreurs), **Leboncoin**, **Bien'ici** (statistiques),
   confrères (Safti, Weinvest… : collaborations inter-agences).
 
+## Cockpit (tableau de bord)
+- Page privée : https://claude.ai/artifact/PD9cBnmKpt8T1gbJyThq32 — relances du jour, pipeline, activité des agents, briefs.
+- Sa base (outil ArtifactData) est la **source de vérité du suivi clients** : collections `contacts`, `briefs`, `activite`.
+  Après chaque échange important, mettre à jour le contact (prochaine action + date de relance) et noter l'action de l'agent dans `activite`.
+- Tâches planifiées : brief du matin (lun-ven 7h45) et bilan de la semaine (vendredi 18h40), heure de Paris.
+- Signature : utiliser celle déjà configurée dans Gmail (ne pas en ajouter une autre dans les brouillons).
+
 ## Organisation des dossiers
 | Dossier | Contenu |
 |---|---|

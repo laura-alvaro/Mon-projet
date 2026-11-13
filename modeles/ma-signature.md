@@ -1,7 +1,3 @@
-# Ma signature (à compléter)
+# Ma signature
 
-[Prénom NOM]
-Conseillère en immobilier — IAD France
-📞 06 .. .. .. .. · ✉️ ...@iadfrance.fr
-🌐 [lien page IAD] · Instagram @...
-Agent commercial indépendant, mandataire de la société IAD France — RSAC [Ville] n° [.........]
+Ma signature est déjà configurée dans Gmail : les brouillons préparés par les agents ne doivent pas en ajouter une seconde.

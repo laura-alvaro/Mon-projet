@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Carrousel 4:5</title>
+<link rel="stylesheet" href="../charte/brand.css"><script src="../charte/coordonnees.js"></script>
+<style>
+  body { display:flex; gap:40px; padding:40px; flex-wrap:wrap; }
+  .slide { width: var(--post-w); height: var(--post-h); position: relative; overflow: hidden; padding: var(--marge); }
+  .num { position:absolute; top: var(--marge); right: var(--marge); font-family: var(--font-titre); font-weight:700; font-size:28px; opacity:.6; }
+  h1 { font-family: var(--font-titre); font-weight: 900; text-transform: uppercase; line-height: 1.02; }
+  /* 1. COUVERTURE — fond bleu nuit, gros titre accrocheur */
+  .couverture { background: var(--bleu-iad); color: var(--blanc); display:flex; flex-direction:column; justify-content:center; }
+  .couverture .tag { display:inline-block; align-self:flex-start; background: var(--accent); color: var(--bleu-iad);
+    font-family: var(--font-titre); font-weight:800; font-size:28px; padding:12px 28px; border-radius:60px; margin-bottom:50px; text-transform:uppercase; }
+  .couverture h1 { font-size: 118px; }
+  .couverture .swipe { margin-top: 70px; font-size: 34px; opacity:.8; }
+  /* 2. CONTENU — fond crème, texte bleu */
+  .contenu { background: var(--creme); color: var(--bleu-iad); padding-top: 180px; }
+  .contenu .grand-num { font-family: var(--font-titre); font-weight:900; font-size: 200px; color: var(--accent); line-height: .8; }
+  .contenu h1 { font-size: 76px; margin: 40px 0; }
+  .contenu p { font-size: 40px; line-height: 1.45; color: var(--gris-texte); max-width: 880px; }
+  .contenu .bandeau { color: var(--bleu-iad); border-top: 2px solid rgba(14,42,71,.12); }
+  .couverture .bandeau, .finale .bandeau { color: var(--blanc); }
+  /* 3. SLIDE FINALE — toujours la même : photo + coordonnées */
+  .finale { background: linear-gradient(165deg, var(--bleu-iad) 50%, var(--bleu-vif)); color: var(--blanc);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-bottom: 180px; }
+  .finale .photo { width: 330px; height: 330px; border-radius:50%; object-fit:cover; border:8px solid var(--blanc); box-shadow:0 0 0 5px var(--accent); }
+  .finale .q { margin-top: 50px; font-family: var(--font-signature); font-style: italic; font-size: 50px; color: var(--accent); }
+  .finale .nom { font-family: var(--font-titre); font-weight:900; font-size: 74px; text-transform:uppercase; margin-top:10px; }
+  .finale .l { font-family: var(--font-titre); font-weight:700; font-size: 40px; margin-top: 20px; }
+  .finale .s { font-size: 30px; opacity:.85; margin-top: 10px; }
+  .finale .cta { margin-top: 50px; background: var(--accent); color: var(--bleu-iad); font-family: var(--font-titre);
+    font-weight:800; font-size: 32px; padding: 24px 50px; border-radius: 80px; text-transform: uppercase; }
+</style></head>
+<body>
+  <div class="slide couverture">
+    <span class="num">1/3</span>
+    <span class="tag">Vendeurs</span>
+    <h1>3 erreurs qui font <span class="accent">baisser</span> le prix de votre bien</h1>
+    <div class="swipe">Glissez → pour les éviter</div>
+    <div class="bandeau"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span class="nom" data-champ="nom"></span></div>
+  </div>
+
+  <div class="slide contenu">
+    <span class="num">2/3</span>
+    <div class="grand-num">01</div>
+    <h1>Surestimer son prix de départ</h1>
+    <p>Un bien trop cher au lancement perd en visibilité dès les premières semaines… et finit souvent vendu sous sa vraie valeur.</p>
+    <div class="bandeau"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span class="nom" data-champ="nom"></span></div>
+  </div>
+
+  <div class="slide finale">
+    <span class="num">3/3</span>
+    <img class="photo" src="../assets/photo.jpg" alt="">
+    <div class="q">Un projet immobilier ?</div>
+    <div class="nom" data-champ="nom"></div>
+    <div class="s" data-champ="titre"></div>
+    <div class="l" data-champ="telephone"></div>
+    <div class="s" data-champ="email"></div>
+    <div class="cta" data-champ="cta"></div>
+    <div class="bandeau"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span data-champ="instagram"></span></div>
+  </div>
+</body></html>

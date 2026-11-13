@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Story 9:16</title>
+<link rel="stylesheet" href="../charte/brand.css"><script src="../charte/coordonnees.js"></script>
+<style>
+  body { padding:40px; }
+  .canvas { width: var(--reel-w); height: var(--reel-h); position: relative; overflow: hidden; background: var(--creme); color: var(--bleu-iad);
+    padding: 260px var(--marge) 0; }
+  /* Zones de sécurité Instagram : 250px en haut, 340px en bas → rien d'important dedans */
+  .tete { display:flex; align-items:center; gap: 24px; }
+  .tete .photo { width: 110px; height: 110px; border-radius:50%; object-fit:cover; border: 4px solid var(--accent); }
+  .tete .photo-vide { font-size: 40px; }
+  .tete .nom { font-family: var(--font-titre); font-weight: 800; font-size: 34px; text-transform: uppercase; }
+  .tete .t { font-size: 26px; color: var(--gris-texte); }
+  .surtitre { margin-top: 150px; font-family: var(--font-signature); font-style: italic; font-size: 60px; color: var(--accent); }
+  h1 { font-family: var(--font-titre); font-weight: 900; font-size: 120px; line-height: 1; text-transform: uppercase; margin-top: 20px; }
+  .zone-sticker { margin-top: 110px; height: 380px; border: 4px dashed rgba(14,42,71,.25); border-radius: 40px;
+    display:flex; align-items:center; justify-content:center; font-size: 30px; color: var(--gris-texte); }
+  .bas { position:absolute; left:0; right:0; bottom:0; height: 340px; background: var(--bleu-iad); color: var(--blanc);
+    display:flex; align-items:center; justify-content:space-between; padding: 0 var(--marge) 80px; font-family: var(--font-titre); font-weight:700; font-size: 34px; }
+  .bas .logo-iad { height: 56px; }
+</style></head>
+<body><div class="canvas">
+  <div class="tete"><img class="photo" src="../assets/photo.jpg" alt=""><div><div class="nom" data-champ="nom"></div><div class="t" data-champ="secteur"></div></div></div>
+  <div class="surtitre">Question du jour</div>
+  <h1>Vendre ou <span class="accent">louer</span> votre bien ?</h1>
+  <div class="zone-sticker">Zone sticker (sondage, question, lien…)</div>
+  <div class="bas"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span data-champ="telephone"></span></div>
+</div></body></html>

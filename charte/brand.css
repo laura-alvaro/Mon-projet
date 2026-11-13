@@ -1,0 +1,49 @@
+/* ==========================================================
+   CHARTE GRAPHIQUE — tokens partagés par tous les modèles
+   Modifier UNIQUEMENT ici pour changer couleurs / typos partout.
+   ⚠️ Couleurs IAD à valider avec le kit de marque officiel iad
+   (intranet mandataire) — remplacer les codes ci-dessous si besoin.
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@1,600&display=swap');
+
+:root {
+  /* Couleurs principales */
+  --bleu-iad:      #0E2A47;  /* bleu nuit — fonds, titres */
+  --bleu-vif:      #1F5FA8;  /* bleu secondaire — aplats, dégradés */
+  --accent:        #00B2C9;  /* turquoise — mots clés, soulignés, CTA */
+  --blanc:         #FFFFFF;
+  --creme:         #F5F3EE;  /* fond clair élégant */
+  --gris-texte:    #5B6676;
+
+  /* Typographies */
+  --font-titre:    'Montserrat', sans-serif;      /* titres : 800/900, MAJUSCULES possibles */
+  --font-texte:    'Inter', sans-serif;           /* texte courant */
+  --font-signature:'Playfair Display', serif;     /* touche élégante : 1 mot en italique max */
+
+  /* Formats (px) */
+  --reel-w: 1080px;  --reel-h: 1920px;   /* Réels & Stories 9:16 */
+  --post-w: 1080px;  --post-h: 1350px;   /* Posts & Carrousels 4:5 */
+  --marge: 80px;                          /* marge de sécurité */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-texte); background: #ddd; }
+
+/* Mot mis en valeur dans un titre */
+.accent    { color: var(--accent); }
+.signature { font-family: var(--font-signature); font-style: italic; font-weight: 600; text-transform: none; }
+
+/* Bandeau signature présent sur CHAQUE visuel (bas de page) */
+.bandeau {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 110px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--marge);
+  font-family: var(--font-titre); font-weight: 700; font-size: 26px; letter-spacing: 1px;
+}
+.bandeau .logo-iad { height: 48px; }
+.bandeau .nom { text-transform: uppercase; }
+
+/* Secours tant que photo / logo ne sont pas dans /assets */
+.photo-vide { display:flex; align-items:center; justify-content:center; background: var(--bleu-vif);
+  color: var(--blanc); font-family: var(--font-titre); font-weight: 800; font-size: 120px; }
+.logo-texte { font-family: var(--font-titre); font-weight: 900; font-size: 44px; letter-spacing: -1px; }

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Post annonce 4:5</title>
+<link rel="stylesheet" href="../charte/brand.css"><script src="../charte/coordonnees.js"></script>
+<style>
+  body { padding:40px; }
+  .canvas { width: var(--post-w); height: var(--post-h); position: relative; overflow: hidden; background: var(--bleu-iad); color: var(--blanc); }
+  .visuel { position:absolute; inset:0 0 430px 0; background: #9aa9b8 url('../assets/bien.jpg') center/cover; }
+  .badge { position:absolute; top: var(--marge); left: var(--marge); background: var(--accent); color: var(--bleu-iad);
+    font-family: var(--font-titre); font-weight:900; font-size: 40px; padding: 18px 40px; border-radius: 80px; letter-spacing: 2px; }
+  /* Variante VENDU : ajouter la classe .vendu sur .badge */
+  .badge.vendu { background: var(--blanc); }
+  .info { position:absolute; left:0; right:0; bottom:110px; height: 320px; padding: 40px var(--marge); }
+  .ville { font-family: var(--font-signature); font-style: italic; font-size: 46px; color: var(--accent); }
+  .type { font-family: var(--font-titre); font-weight: 900; font-size: 66px; text-transform: uppercase; margin-top: 6px; }
+  .details { display:flex; gap: 40px; margin-top: 26px; font-size: 32px; font-weight: 500; opacity: .9; }
+  .prix { position:absolute; right: var(--marge); top: 40px; font-family: var(--font-titre); font-weight:900; font-size: 60px; }
+  .bandeau { background: rgba(255,255,255,.06); }
+</style></head>
+<body><div class="canvas">
+  <div class="visuel"></div>
+  <div class="badge">À VENDRE</div>
+  <div class="info">
+    <div class="ville">Nom de la ville</div>
+    <div class="type">Maison familiale</div>
+    <div class="details"><span>120 m²</span><span>4 chambres</span><span>Jardin 500 m²</span></div>
+    <div class="prix">320 000 €</div>
+  </div>
+  <div class="bandeau"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span><span data-champ="nom"></span> · <span data-champ="telephone"></span></span></div>
+</div></body></html>

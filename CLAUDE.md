@@ -40,7 +40,9 @@ Ne jamais refaire deux fois de suite le même style. Styles déjà créés :
 - **« Visite immersive »** (`reels/pompey-t5/`) : photos plein écran, carte texte blanche, fondus doux.
 - **« 3 surprises »** (`reels/maison-8-pieces/`) : photos encadrées dans une carte sur fond bleu + vague blanche,
   pastilles numérotées corail, transitions glissées, check-list animée des points forts.
-Idées pour les suivants : « Avant / après », « Les chiffres clés » (gros chiffres animés), « 5 raisons de l'acheter »,
+- **« Avant / Après »** (`reels/joudreville/`) : écran partagé brut/projection, rideau qui révèle la projection,
+  bandeaux « fiche » avec trait corail, nuage d'étiquettes. Mention « Image de projection non contractuelle » obligatoire.
+Idées pour les suivants : « Les chiffres clés » (gros chiffres animés), « 5 raisons de l'acheter »,
 « Vrai ou faux ? », « Une journée dans cette maison », « Split écran 2 photos ».
 Rythme posé : 3 à 4 s par photo (préférence de Laura). Toujours fournir aussi une **couverture** 1080×1920
 avec l'essentiel dans la zone centrale 4:5 (y 285 → 1635).

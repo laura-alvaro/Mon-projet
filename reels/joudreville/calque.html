@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Calques</title>
+<link rel="stylesheet" href="../../charte/brand.css">
+<script src="../../charte/coordonnees.js"></script><script src="scenes.js"></script>
+<style>
+  html, body { background: transparent; }
+  .canvas { width:1080px; height:1920px; position:relative; overflow:hidden; }
+  .logo { position:absolute; top:250px; left:70px; } .logo .logo-iad { height:92px; filter: drop-shadow(0 3px 10px rgba(0,0,0,.45)); }
+  .chip { position:absolute; top:262px; right:70px; background: var(--corail); color:#fff; font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:34px; padding:12px 32px; border-radius:60px; box-shadow:0 8px 20px rgba(0,0,0,.25); }
+  .lbl { position:absolute; left:70px; font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:36px; padding:10px 28px; border-radius:14px; letter-spacing:1px; box-shadow:0 8px 20px rgba(0,0,0,.3); }
+  .lbl.avant { background:#fff; color: var(--bleu-fonce); } .lbl.apres { background: var(--corail); color:#fff; }
+  .nc { position:absolute; left:70px; font-size:22px; font-weight:600; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.7); }
+  /* SPLIT : haut 0-820 / bande 820-1140 / bas 1140-1920 */
+  .bande { position:absolute; left:0; right:0; top:820px; height:320px; background: var(--bleu-iad); display:flex; flex-direction:column; justify-content:center; padding:0 70px; }
+  .bande .t { font-family: var(--font-titre); font-weight:800; font-style:italic; color:#fff; font-size:70px; line-height:1.05; margin-top:10px; }
+  .bande .k { align-self:flex-start; background:#fff; color: var(--corail); font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:32px; padding:8px 26px; border-radius:50px; }
+  /* WIPE : titre bas */
+  .bas { position:absolute; left:70px; right:70px; bottom:400px; font-family: var(--font-titre); font-weight:800; font-style:italic; color:#fff; font-size:88px; line-height:1.05; text-shadow:0 4px 24px rgba(0,0,0,.6); }
+  .bas.sig { font-family: var(--font-signature); font-weight:600; font-size:84px; }
+  .degrade { position:absolute; left:0; right:0; bottom:0; height:900px; background: linear-gradient(transparent, rgba(31,78,121,.75)); }
+  /* PLEIN : bandeau fiche */
+  .fiche { position:absolute; left:0; right:120px; bottom:400px; background: var(--bleu-iad); border-radius:0 40px 40px 0; padding:34px 50px 36px 70px; box-shadow:0 16px 40px rgba(0,0,0,.3); }
+  .fiche::before { content:''; position:absolute; left:0; top:0; bottom:0; width:16px; background: var(--corail); }
+  .fiche .k { font-family: var(--font-titre); font-weight:800; font-style:italic; color: var(--bleu-fonce); font-size:36px; }
+  .fiche .t { font-family: var(--font-titre); font-weight:800; font-style:italic; color:#fff; font-size:72px; line-height:1.05; margin-top:4px; }
+  /* TAGS */
+  .fond-bleu { background: var(--bleu-iad); }
+  .fond-bleu .vague { bottom:0; height:420px; }
+  .tags h2 { position:absolute; top:420px; left:70px; right:70px; font-family: var(--font-titre); font-weight:800; font-style:italic; color:#fff; font-size:96px; line-height:1; }
+  .nuage { position:absolute; top:690px; left:70px; right:70px; display:flex; flex-wrap:wrap; gap:22px; }
+  .tg { display:inline-flex; align-items:center; gap:16px; background:#fff; border-radius:60px; padding:20px 34px; box-shadow:0 12px 26px rgba(31,78,121,.28);
+    font-family: var(--font-titre); font-weight:800; font-style:italic; color: var(--bleu-fonce); font-size:40px; }
+  .tg i { width:22px; height:22px; border-radius:50%; background: var(--corail); flex:none; }
+  .tg.cache { visibility:hidden; }
+  /* FINAL */
+  .final .photo-f { position:absolute; inset:0 0 auto 0; height:1000px; background-size:cover; background-position:center; }
+  .final .vague { top:820px; height:240px; }
+  .final .blanc { position:absolute; left:0; right:0; top:1058px; bottom:0; background:#fff; }
+  .final .txt { position:absolute; top:1040px; left:70px; right:70px; text-align:center; }
+  .final .sig { font-family: var(--font-signature); font-style:italic; color: var(--corail); font-size:64px; }
+  .final h1 { font-family: var(--font-titre); font-weight:800; font-style:italic; color: var(--bleu-fonce); font-size:100px; line-height:1; margin-top:4px; }
+  .final .inf { font-family: var(--font-titre); font-weight:700; font-style:italic; color: var(--bleu-iad); font-size:50px; margin-top:16px; }
+  .final .cta { display:inline-flex; align-items:center; gap:16px; margin-top:34px; background: var(--corail); color:#fff; font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:40px; padding:22px 44px; border-radius:70px; box-shadow:0 14px 30px rgba(206,84,81,.35); }
+  .final .cta .wa-icone { width:58px; height:58px; }
+</style></head>
+<body><div class="canvas" id="c"></div>
+<script>
+  const [i, mode, n] = location.hash.slice(1).split("-"); const s = SCENES[+i]; const c = document.getElementById("c");
+  const haut = `<div class="logo"><img class="logo-iad" src="../../assets/logo-iad.png" alt=""></div><span class="chip">Exclusivité</span>`;
+  const vague = `<svg class="vague" viewBox="0 0 1080 220" preserveAspectRatio="none"><path d="M0,170 C300,70 640,30 1080,10 L1080,222 L0,222 Z" fill="#fff"/></svg>`;
+  let h = "";
+  if (s.type === "split") h = haut + `<span class="lbl avant" style="top:730px">Aujourd'hui</span><div class="bande"><span class="k">${s.tag}</span><div class="t">${s.titre}</div></div>`
+      + `<span class="lbl apres" style="top:1170px;left:auto;right:70px">Projection</span><span class="nc" style="top:1530px">Image de projection non contractuelle</span>`;
+  if (s.type === "wipe" && mode === "avant") h = haut + `<div class="degrade"></div><span class="lbl avant" style="top:400px">Aujourd'hui</span><div class="bas">${s.titreAvant}</div>`;
+  if (s.type === "wipe" && mode === "apres") h = haut + `<div class="degrade"></div><div class="bas sig">${s.titreApres}</div><span class="nc" style="bottom:360px">Image de projection non contractuelle</span>`;
+  if (s.type === "plein") h = haut + `<div class="fiche"><div class="k">${s.tag}</div><div class="t">${s.titre}</div></div>`;
+  if (s.type === "tags") { c.classList.add("fond-bleu","tags"); h = vague + haut + `<h2>${s.titre}</h2><div class="nuage">`
+      + s.items.map((t,k)=>`<span class="tg ${k < +n ? "" : "cache"}"><i></i>${t}</span>`).join("") + `</div>`; }
+  if (s.type === "final") { c.classList.add("fond-bleu","final"); h = `<div class="photo-f" style="background-image:url('photos/${s.photo}.jpg')"></div>` + vague + `<div class="blanc"></div>` + haut
+      + `<div class="txt"><div class="sig">En exclusivité à</div><h1>Joudreville</h1><div class="inf">Maison 95 m² · Terrain 440 m²</div>`
+      + `<div class="cta" data-icone="whatsapp">Plans & devis : écrivez-moi</div></div>`; }
+  c.innerHTML = h;
+</script></body></html>

@@ -35,6 +35,16 @@ signature, même typographies. Objectif : un feed beau, propre, cohérent, qui d
 11. Pour chaque contenu, livrer aussi : **la légende** (accroche + texte + CTA + 5 à 10 hashtags
     locaux/immobilier) et, pour les Réels, **le script plan par plan** avec textes à l'écran.
 
+## Styles de Réels (varier à chaque nouveau Réel)
+Ne jamais refaire deux fois de suite le même style. Styles déjà créés :
+- **« Visite immersive »** (`reels/pompey-t5/`) : photos plein écran, carte texte blanche, fondus doux.
+- **« 3 surprises »** (`reels/maison-8-pieces/`) : photos encadrées dans une carte sur fond bleu + vague blanche,
+  pastilles numérotées corail, transitions glissées, check-list animée des points forts.
+Idées pour les suivants : « Avant / après », « Les chiffres clés » (gros chiffres animés), « 5 raisons de l'acheter »,
+« Vrai ou faux ? », « Une journée dans cette maison », « Split écran 2 photos ».
+Rythme posé : 3 à 4 s par photo (préférence de Laura). Toujours fournir aussi une **couverture** 1080×1920
+avec l'essentiel dans la zone centrale 4:5 (y 285 → 1635).
+
 ## Variété sans perdre la cohérence
 Alterner les fonds (bleu ciel iAD / blanc / photo de bien) et les mises en page, mais **jamais**
 les couleurs, les typos ni la signature. Dans la grille Instagram, alterner un visuel bleu

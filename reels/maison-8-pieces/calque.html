@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Calques</title>
+<link rel="stylesheet" href="../../charte/brand.css">
+<script src="../../charte/coordonnees.js"></script><script src="scenes.js"></script>
+<style>
+  html, body { background: transparent; }
+  .canvas { width:1080px; height:1920px; position:relative; overflow:hidden; }
+  /* CARTE : x70 y380 w940 h960 */
+  .fond { background: var(--bleu-iad); }
+  .fond .vague { top: 1060px; height: 300px; }
+  .fond .blanc { position:absolute; left:0; right:0; top:1358px; bottom:0; background:#fff; }
+  .logo { position:absolute; top:250px; left:70px; } .logo .logo-iad { height: 92px; }
+  .chip { position:absolute; top:262px; right:70px; background: var(--corail); color:#fff; font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:34px; padding:12px 32px; border-radius:60px; }
+  .ombre { position:absolute; left:70px; top:380px; width:940px; height:960px; border-radius:44px; box-shadow: 0 30px 60px rgba(31,78,121,.35); background:#ddd; }
+  .texte { position:absolute; left:70px; right:70px; top:1372px; }
+  .tag { display:inline-block; background: var(--corail); color:#fff; font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:34px; padding:10px 30px; border-radius:60px; }
+  .titre { font-family: var(--font-titre); font-weight:800; font-style:italic; color: var(--bleu-fonce); font-size:70px; line-height:1.05; margin-top:14px; }
+  .pastille { position:absolute; left:110px; top:410px; background:#fff; color: var(--bleu-fonce); font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:36px; padding:12px 32px; border-radius:60px; box-shadow:0 8px 20px rgba(0,0,0,.2); }
+  .numero { position:absolute; right:40px; top:330px; width:190px; height:190px; border-radius:50%; background: var(--corail); color:#fff; border:8px solid #fff;
+    display:flex; align-items:center; justify-content:center; font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:120px; box-shadow:0 14px 30px rgba(0,0,0,.3); }
+  .wa { position:absolute; left:50%; transform:translateX(-50%); top:1240px; display:inline-flex; align-items:center; gap:16px; white-space:nowrap; background:#fff; color: var(--corail);
+    font-family: var(--font-titre); font-weight:800; font-style:italic; font-size:42px; padding:20px 44px; border-radius:70px; box-shadow:0 14px 30px rgba(0,0,0,.25); }
+  .wa .wa-icone { width:60px; height:60px; }
+  .prix .titre { font-size: 96px; }
+  /* LISTE */
+  .liste { background: var(--bleu-iad); }
+  .liste .vague { top: 1240px; height: 260px; }
+  .liste .blanc { position:absolute; left:0; right:0; top:1498px; bottom:0; background:#fff; }
+  .liste h2 { position:absolute; top:420px; left:70px; right:70px; font-family: var(--font-titre); font-weight:800; font-style:italic; color:#fff; font-size:96px; line-height:1; }
+  .liste .sig { position:absolute; top:540px; left:70px; font-family: var(--font-signature); font-style:italic; color: var(--bleu-fonce); font-size:54px; }
+  .items { position:absolute; top:680px; left:70px; right:70px; }
+  .item { display:flex; align-items:center; gap:28px; background:#fff; border-radius:30px; padding:26px 34px; margin-bottom:26px; box-shadow:0 14px 30px rgba(31,78,121,.25);
+    font-family: var(--font-titre); font-weight:800; font-style:italic; color: var(--bleu-fonce); font-size:46px; line-height:1.1; }
+  .coche { flex:none; width:76px; height:76px; border-radius:50%; background: var(--corail); color:#fff; display:flex; align-items:center; justify-content:center; font-size:48px; font-style:normal; }
+  .cache { visibility:hidden; }
+</style></head>
+<body><div class="canvas" id="c"></div>
+<script>
+  const [i, mode, n] = location.hash.slice(1).split("-"); const s = SCENES[+i]; const c = document.getElementById("c");
+  const commun = `<div class="logo"><img class="logo-iad" src="../../assets/logo-iad.png" alt=""></div><span class="chip">À vendre</span>`;
+  const vague = `<svg class="vague" viewBox="0 0 1080 220" preserveAspectRatio="none"><path d="M0,170 C300,70 640,30 1080,10 L1080,222 L0,222 Z" fill="#fff"/></svg><div class="blanc"></div>`;
+  if (mode === "fond") { c.className = "canvas fond"; c.innerHTML = vague + commun + `<div class="ombre"></div>`; }
+  else if (mode === "texte") {
+    c.className = "canvas" + (s.wa ? " prix" : "");
+    c.innerHTML = (s.pastille ? `<span class="pastille">${s.pastille}</span>` : "")
+      + (s.numero ? `<div class="numero">${s.numero}</div>` : "")
+      + (s.wa ? `<div class="wa" data-icone="whatsapp">Visite ? Écrivez-moi</div>` : "")
+      + `<div class="texte"><span class="tag">${s.tag}</span><div class="titre">${s.titre}</div></div>`;
+  }
+  else if (mode === "liste") {
+    c.className = "canvas liste";
+    c.innerHTML = vague + commun + `<h2>${s.titre}</h2><div class="sig">pour résumer…</div><div class="items">`
+      + s.items.map((t, k) => `<div class="item ${k < +n ? "" : "cache"}"><span class="coche">✓</span><span>${t}</span></div>`).join("") + `</div>`;
+  }
+</script></body></html>

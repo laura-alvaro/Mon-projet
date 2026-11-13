@@ -24,7 +24,8 @@ signature, même typographies. Objectif : un feed beau, propre, cohérent, qui d
    - **Post / story** → bandeau bas avec logo iAD + nom + logo WhatsApp et mon numéro.
 5. **Ma photo** : `assets/photo.jpg` — toujours en rond, bordure blanche + anneau corail
    (portrait complet : `assets/photo-portrait.jpg`).
-6. **Logo** : `assets/logo-iad.png` — sur chaque visuel, dans le bandeau du bas.
+6. **Logo** : `assets/logo-iad.png` (blanc, sur fond bleu/photo) ou `assets/logo-iad-bleu.png`
+   (sur fond blanc) — sur chaque visuel, en haut à gauche ou dans le bandeau du bas.
 7. **Formats** : Réels & stories 1080×1920 (9:16) ; posts & carrousels 1080×1350 (4:5).
    Respecter les zones de sécurité (250 px en haut, 340 px en bas pour les stories/réels).
 8. **Ton** : professionnel, chaleureux, rassurant, vouvoiement. Phrases courtes. Un message par visuel.

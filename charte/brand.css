@@ -36,7 +36,8 @@ body { font-family: var(--font-texte); background: #ddd; }
 .vague { position: absolute; left: 0; width: 100%; display: block; }
 
 /* Logo iAD */
-.logo-iad { height: 64px; }
+.logo-iad { height: 84px; display: block; }
+.logo-iad.bleu { }
 .logo-texte { display: inline-flex; flex-direction: column; line-height: 1; color: var(--blanc); }
 .logo-texte b { font-family: var(--font-titre); font-weight: 800; font-size: 54px; letter-spacing: -2px; }
 .logo-texte small { font-family: var(--font-texte); font-weight: 600; font-size: 13px; letter-spacing: 3px; margin-top: 2px; }

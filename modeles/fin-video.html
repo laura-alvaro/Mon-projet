@@ -3,35 +3,37 @@
 <link rel="stylesheet" href="../charte/brand.css"><script src="../charte/coordonnees.js"></script>
 <style>
   /* À placer sur les 3 DERNIÈRES SECONDES de chaque Réel / Story vidéo */
-  .canvas { width: var(--reel-w); height: var(--reel-h); position: relative; overflow: hidden;
-    background: linear-gradient(165deg, var(--bleu-iad) 0%, var(--bleu-iad) 55%, var(--bleu-vif) 100%);
-    color: var(--blanc); display:flex; flex-direction:column; align-items:center; text-align:center; padding: 220px var(--marge) 0; }
-  .halo { position:absolute; width:900px; height:900px; border-radius:50%; top:-300px; right:-400px;
-    border: 3px solid var(--accent); opacity:.25; }
-  .photo { width: 420px; height: 420px; border-radius: 50%; object-fit: cover;
-    border: 10px solid var(--blanc); box-shadow: 0 0 0 6px var(--accent), 0 30px 60px rgba(0,0,0,.35); }
-  .pre { margin-top: 80px; font-family: var(--font-signature); font-style: italic; font-size: 52px; color: var(--accent); }
-  .nom { margin-top: 10px; font-family: var(--font-titre); font-weight: 900; font-size: 92px; text-transform: uppercase; line-height: 1; letter-spacing: 2px; }
-  .titre { margin-top: 24px; font-size: 36px; font-weight: 500; opacity: .85; }
-  .trait { width: 120px; height: 6px; background: var(--accent); margin: 60px auto; border-radius: 3px; }
-  .ligne { font-family: var(--font-titre); font-weight: 700; font-size: 46px; margin: 14px 0; }
-  .ligne.petit { font-size: 36px; font-weight: 500; opacity: .9; }
-  .cta { margin-top: 70px; background: var(--accent); color: var(--bleu-iad); font-family: var(--font-titre);
-    font-weight: 800; font-size: 40px; padding: 30px 60px; border-radius: 100px; text-transform: uppercase; letter-spacing: 1px; }
-  .rsac { position:absolute; bottom: 150px; left: var(--marge); right: var(--marge); font-size: 20px; opacity: .55; }
-  .bandeau { background: rgba(0,0,0,.18); }
+  .canvas { width: var(--reel-w); height: var(--reel-h); position: relative; overflow: hidden; background: var(--blanc); text-align: center; }
+  .haut { position:absolute; inset: 0 0 auto 0; height: 900px; background: var(--bleu-iad); }
+  .haut .vague { bottom: -1px; height: 260px; }
+  .logo-haut { position:absolute; top: 230px; left: var(--marge); }
+  .photo { position:absolute; left: 50%; top: 380px; transform: translateX(-50%); width: 460px; height: 460px; }
+  .bas { position:absolute; top: 880px; left: var(--marge); right: var(--marge); color: var(--bleu-fonce); }
+  .pre { font-family: var(--font-signature); font-style: italic; font-size: 48px; color: var(--corail); }
+  .nom { font-family: var(--font-titre); font-weight: 800; font-style: italic; font-size: 96px; line-height: 1.05; margin-top: 6px; }
+  .titre { font-size: 34px; font-weight: 600; color: var(--gris-texte); margin-top: 6px; }
+  .trait { width: 140px; height: 7px; background: var(--corail); margin: 40px auto; border-radius: 4px; }
+  .ligne { font-family: var(--font-texte); font-weight: 700; font-size: 46px; display:flex; align-items:center; justify-content:center; gap: 16px; }
+  .ligne.petit { font-size: 32px; font-weight: 500; margin-top: 14px; color: var(--gris-texte); }
+  .cta { margin: 44px auto 0; display: inline-flex; align-items:center; gap: 18px; background: var(--corail); color: var(--blanc);
+    font-family: var(--font-titre); font-weight: 800; font-style: italic; font-size: 40px; padding: 26px 56px; border-radius: 100px;
+    box-shadow: 0 14px 30px rgba(206,84,81,.35); }
+  .cta .wa-icone { width: 58px; height: 58px; }
+  .rsac { position:absolute; bottom: 200px; left: var(--marge); right: var(--marge); font-size: 20px; color: var(--gris-texte); opacity: .8; }
 </style></head>
 <body><div class="canvas">
-  <div class="halo"></div>
+  <div class="haut"><svg class="vague" viewBox="0 0 1080 220" preserveAspectRatio="none"><path d="M0,150 C260,60 560,20 1080,0 L1080,220 L0,220 Z" fill="#FFFFFF"/></svg></div>
+  <div class="logo-haut"><img class="logo-iad" src="../assets/logo-iad.png" alt=""></div>
   <img class="photo" src="../assets/photo.jpg" alt="">
-  <div class="pre">Votre projet, mon engagement</div>
-  <div class="nom" data-champ="nom"></div>
-  <div class="titre" data-champ="titre"></div>
-  <div class="trait"></div>
-  <div class="ligne" data-champ="telephone"></div>
-  <div class="ligne petit" data-champ="email"></div>
-  <div class="ligne petit" data-champ="secteur"></div>
-  <div class="cta" data-champ="cta"></div>
+  <div class="bas">
+    <div class="pre">Votre projet, mon engagement</div>
+    <div class="nom" data-champ="nom"></div>
+    <div class="titre" data-champ="titre"></div>
+    <div class="trait"></div>
+    <div class="ligne" data-champ="telephone"></div>
+    <div class="ligne petit" data-champ="email"></div>
+    <div class="ligne petit" data-champ="secteur"></div>
+    <div class="cta" data-icone="whatsapp"><span data-champ="cta"></span></div>
+  </div>
   <div class="rsac" data-champ="rsac"></div>
-  <div class="bandeau"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span data-champ="instagram"></span></div>
 </div></body></html>

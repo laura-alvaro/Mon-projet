@@ -4,58 +4,72 @@
 <style>
   body { display:flex; gap:40px; padding:40px; flex-wrap:wrap; }
   .slide { width: var(--post-w); height: var(--post-h); position: relative; overflow: hidden; padding: var(--marge); }
-  .num { position:absolute; top: var(--marge); right: var(--marge); font-family: var(--font-titre); font-weight:700; font-size:28px; opacity:.6; }
-  h1 { font-family: var(--font-titre); font-weight: 900; text-transform: uppercase; line-height: 1.02; }
-  /* 1. COUVERTURE — fond bleu nuit, gros titre accrocheur */
+  .logo-haut { position:absolute; top: 60px; left: var(--marge); }
+  .num { position:absolute; top: 70px; right: var(--marge); font-family: var(--font-titre); font-weight:700; font-size:28px; }
+  h1 { font-family: var(--font-titre); font-weight: 800; font-style: italic; line-height: 1.08; }
+  /* 1. COUVERTURE — bleu iAD plein, titre blanc */
   .couverture { background: var(--bleu-iad); color: var(--blanc); display:flex; flex-direction:column; justify-content:center; }
-  .couverture .tag { display:inline-block; align-self:flex-start; background: var(--accent); color: var(--bleu-iad);
-    font-family: var(--font-titre); font-weight:800; font-size:28px; padding:12px 28px; border-radius:60px; margin-bottom:50px; text-transform:uppercase; }
-  .couverture h1 { font-size: 118px; }
-  .couverture .swipe { margin-top: 70px; font-size: 34px; opacity:.8; }
-  /* 2. CONTENU — fond crème, texte bleu */
-  .contenu { background: var(--creme); color: var(--bleu-iad); padding-top: 180px; }
-  .contenu .grand-num { font-family: var(--font-titre); font-weight:900; font-size: 200px; color: var(--accent); line-height: .8; }
-  .contenu h1 { font-size: 76px; margin: 40px 0; }
-  .contenu p { font-size: 40px; line-height: 1.45; color: var(--gris-texte); max-width: 880px; }
-  .contenu .bandeau { color: var(--bleu-iad); border-top: 2px solid rgba(14,42,71,.12); }
-  .couverture .bandeau, .finale .bandeau { color: var(--blanc); }
-  /* 3. SLIDE FINALE — toujours la même : photo + coordonnées */
-  .finale { background: linear-gradient(165deg, var(--bleu-iad) 50%, var(--bleu-vif)); color: var(--blanc);
-    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-bottom: 180px; }
-  .finale .photo { width: 330px; height: 330px; border-radius:50%; object-fit:cover; border:8px solid var(--blanc); box-shadow:0 0 0 5px var(--accent); }
-  .finale .q { margin-top: 50px; font-family: var(--font-signature); font-style: italic; font-size: 50px; color: var(--accent); }
-  .finale .nom { font-family: var(--font-titre); font-weight:900; font-size: 74px; text-transform:uppercase; margin-top:10px; }
-  .finale .l { font-family: var(--font-titre); font-weight:700; font-size: 40px; margin-top: 20px; }
-  .finale .s { font-size: 30px; opacity:.85; margin-top: 10px; }
-  .finale .cta { margin-top: 50px; background: var(--accent); color: var(--bleu-iad); font-family: var(--font-titre);
-    font-weight:800; font-size: 32px; padding: 24px 50px; border-radius: 80px; text-transform: uppercase; }
+  .couverture .tag { align-self:flex-start; background: var(--corail); color: var(--blanc); font-family: var(--font-titre);
+    font-weight:800; font-style: italic; font-size:30px; padding:12px 30px; border-radius:60px; margin-bottom:46px; }
+  .couverture h1 { font-size: 104px; text-shadow: 0 4px 20px rgba(31,78,121,.25); }
+  .couverture .vague { bottom: 0; height: 200px; }
+  .couverture .swipe { position:absolute; bottom: 50px; right: var(--marge); color: var(--bleu-fonce); font-weight: 700; font-size: 32px; }
+  /* 2. CONTENU — fond blanc, chiffre corail */
+  .contenu { background: var(--blanc); color: var(--bleu-fonce); padding-top: 220px; }
+  .contenu .num { color: var(--bleu-iad); }
+  .contenu .grand-num { font-family: var(--font-titre); font-weight:800; font-style: italic; font-size: 190px; color: var(--bleu-iad); line-height: .9; }
+  .contenu .trait { width: 140px; height: 7px; background: var(--corail); border-radius: 4px; margin: 30px 0; }
+  .contenu h1 { font-size: 76px; }
+  .contenu p { font-size: 38px; line-height: 1.5; color: var(--gris-texte); margin-top: 34px; max-width: 900px; }
+  /* 3. FINALE — toujours la même : photo + coordonnées */
+  .finale { background: var(--bleu-iad); color: var(--bleu-fonce); text-align: center; }
+  .finale .vague { top: 380px; height: 200px; }
+  .finale::after { content:''; position:absolute; left:0; right:0; top: 578px; bottom:0; background: var(--blanc); }
+  .finale .txt, .finale .photo { z-index: 2; }
+  .finale .num { color: var(--blanc); }
+  .finale .photo { position:absolute; left:50%; top: 130px; transform: translateX(-50%); width: 330px; height: 330px; }
+  .finale .txt { position:absolute; top: 560px; left: var(--marge); right: var(--marge); }
+  .finale .q { font-family: var(--font-signature); font-style: italic; font-size: 46px; color: var(--corail); }
+  .finale .nom { font-family: var(--font-titre); font-weight:800; font-style: italic; font-size: 76px; }
+  .finale .s { font-size: 30px; color: var(--gris-texte); margin-top: 8px; font-weight: 500; }
+  .finale .l { font-weight:700; font-size: 42px; margin-top: 26px; }
+  .finale .cta { margin-top: 36px; display:inline-flex; align-items:center; gap: 14px; background: var(--corail); color: var(--blanc);
+    font-family: var(--font-titre); font-weight:800; font-style: italic; font-size: 34px; padding: 22px 46px; border-radius: 80px; }
+  .finale .cta .wa-icone { width: 48px; height: 48px; }
 </style></head>
 <body>
   <div class="slide couverture">
+    <div class="logo-haut"><img class="logo-iad" src="../assets/logo-iad.png" alt=""></div>
     <span class="num">1/3</span>
     <span class="tag">Vendeurs</span>
-    <h1>3 erreurs qui font <span class="accent">baisser</span> le prix de votre bien</h1>
-    <div class="swipe">Glissez → pour les éviter</div>
-    <div class="bandeau"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span class="nom" data-champ="nom"></span></div>
+    <h1>3 erreurs qui font baisser le prix de votre bien</h1>
+    <svg class="vague" viewBox="0 0 1080 220" preserveAspectRatio="none"><path d="M0,150 C260,60 560,20 1080,0 L1080,220 L0,220 Z" fill="#FFFFFF"/></svg>
+    <div class="swipe">Glissez →</div>
   </div>
 
   <div class="slide contenu">
+    <div class="logo-haut" style="background:var(--bleu-iad);padding:10px 18px;border-radius:14px"><img class="logo-iad" src="../assets/logo-iad.png" alt=""></div>
     <span class="num">2/3</span>
     <div class="grand-num">01</div>
+    <div class="trait"></div>
     <h1>Surestimer son prix de départ</h1>
     <p>Un bien trop cher au lancement perd en visibilité dès les premières semaines… et finit souvent vendu sous sa vraie valeur.</p>
-    <div class="bandeau"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span class="nom" data-champ="nom"></span></div>
+    <div class="bandeau"><span data-champ="nom"></span><span class="contact" data-icone="whatsapp"><span data-champ="whatsapp"></span></span></div>
   </div>
 
   <div class="slide finale">
+    <svg class="vague" viewBox="0 0 1080 220" preserveAspectRatio="none"><path d="M0,150 C260,60 560,20 1080,0 L1080,220 L0,220 Z" fill="#FFFFFF"/></svg>
+    <div class="logo-haut"><img class="logo-iad" src="../assets/logo-iad.png" alt=""></div>
     <span class="num">3/3</span>
     <img class="photo" src="../assets/photo.jpg" alt="">
-    <div class="q">Un projet immobilier ?</div>
-    <div class="nom" data-champ="nom"></div>
-    <div class="s" data-champ="titre"></div>
-    <div class="l" data-champ="telephone"></div>
-    <div class="s" data-champ="email"></div>
-    <div class="cta" data-champ="cta"></div>
-    <div class="bandeau"><img class="logo-iad" src="../assets/logo-iad.png" alt=""><span data-champ="instagram"></span></div>
+    <div class="txt">
+      <div class="q">Un projet immobilier ?</div>
+      <div class="nom" data-champ="nom"></div>
+      <div class="s" data-champ="titre"></div>
+      <div class="l" data-champ="telephone"></div>
+      <div class="s" data-champ="email"></div>
+      <div class="s" data-champ="secteur"></div>
+      <div class="cta" data-icone="whatsapp"><span data-champ="cta"></span></div>
+    </div>
   </div>
 </body></html>

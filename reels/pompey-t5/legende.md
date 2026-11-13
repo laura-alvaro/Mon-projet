@@ -10,8 +10,8 @@
 🌿 Terrasse en bois
 📦 Grand sous-sol
 
-💰 Prix : [À COMPLÉTER] € — honoraires [à la charge du vendeur / de l'acquéreur]
-⚡ DPE : classe [À COMPLÉTER] · GES : classe [À COMPLÉTER]
+💰 Prix : 239 000 € FAI
+⚡ DPE : C · GES : A
 
 📲 Vous souhaitez la visiter ? Écrivez-moi sur WhatsApp : https://wa.me/33750408037
 📞 07 50 40 80 37
@@ -21,19 +21,19 @@ Agent commercial immatriculé au RSAC de Val de Briey sous le n° 892 205 287
 
 #Pompey #MaisonAVendre #ImmobilierNancy #MeurtheEtMoselle #MaisonT5 #ImmobilierLorraine #iadfrance #iadimmobilier #VisiteVirtuelle #ImmobilierPompey
 
-## Déroulé du Réel (27 s)
+## Déroulé du Réel (38 s, rythme posé)
 | Temps | Photo | Texte à l'écran |
 |---|---|---|
-| 0–3,6 s | Salon | **À vendre · Pompey** — Maison T5 134 m² · 4 chambres · *Suivez la visite…* |
-| 3,3–5,9 s | Cuisine | Cuisine — Équipée & moderne |
-| 5,6–8 s | Chambre 1 | Chambre parentale |
-| 7,7–10,1 s | Dressing | Espace dressing — Avec salle d'eau |
-| 9,8–15,2 s | Chambres 2, 3, 4 | Lumineuse · Puits de lumière · Spacieuse |
-| 14,9–17,5 s | Salle de bain | Baignoire + douche, double vasque |
-| 17,2–19,6 s | Terrasse | Terrasse en bois |
-| 19,3–21,7 s | Sous-sol | De l'espace en plus |
-| 21,4–24,6 s | Façade | Pompey — T5 · 134 m² · 4 chambres — *Visite ? Écrivez-moi* |
-| 23,5–27 s | Carte de fin | Ma photo, coordonnées, WhatsApp, RSAC |
+| 0–4,8 s | Salon | **À vendre · Pompey** — Maison T5 134 m² · 4 chambres · *Suivez la visite…* |
+| 4,2–7,8 s | Cuisine | Cuisine — Équipée & moderne |
+| 7,2–10,6 s | Chambre 1 | Chambre parentale |
+| 10–13,4 s | Dressing | Espace dressing — Avec salle d'eau |
+| 12,8–20,2 s | Chambres 2, 3, 4 | Lumineuse · Puits de lumière · Spacieuse |
+| 19,6–23,2 s | Salle de bain | Baignoire + douche, double vasque |
+| 22,6–26 s | Terrasse | Terrasse en bois |
+| 25,4–28,8 s | Sous-sol | De l'espace en plus |
+| 28,2–33,4 s | Façade | Pompey — T5 · 134 m² · 4 chambres — **239 000 € FAI** — DPE C · GES A — *Visite ? Écrivez-moi* |
+| 32,8–37,7 s | Carte de fin | Ma photo, coordonnées, WhatsApp, RSAC |
 
 ## Conseils de publication
 - Ajouter une **musique tendance** directement dans Instagram/TikTok (meilleure portée, droits gérés).

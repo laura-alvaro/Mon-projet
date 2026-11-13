@@ -24,6 +24,9 @@
   /* Récap */
   .recap .boite { background: var(--bleu-iad); }
   .recap .titre { color:#fff; font-size: 96px; }
+  .recap .prix { font-family: var(--font-titre); font-weight: 800; color: var(--bleu-fonce); font-size: 84px; margin-top: 16px; }
+  .recap .dpe { font-family: var(--font-texte); font-weight: 700; color:#fff; font-size: 36px; margin-top: 6px; }
+  .recap .titre { font-size: 88px; }
   .recap .cta { margin-top: 30px; display:inline-flex; align-items:center; gap: 16px; background:#fff; color: var(--corail);
     font-family: var(--font-titre); font-weight: 800; font-style: italic; font-size: 40px; padding: 18px 38px; border-radius: 60px; }
   .recap .cta .wa-icone { width: 56px; height: 56px; }
@@ -34,7 +37,7 @@
   const type = s.type || "piece";
   let extra = "";
   if (type === "accroche") extra = `<div class="sous">${s.sous}</div><div class="sig">${s.signature}</div>`;
-  if (type === "recap") extra = `<div class="cta" data-icone="whatsapp">Visite ? Écrivez-moi</div>`;
+  if (type === "recap") extra = `<div class="prix">${s.prix}</div><div class="dpe">${s.dpe}</div><div class="cta" data-icone="whatsapp">Visite ? Écrivez-moi</div>`;
   document.getElementById("c").innerHTML = `
     <div class="top"><img class="logo-iad" src="../../assets/logo-iad.png" alt="">${type==="accroche"?"":'<span class="chip">À vendre</span>'}</div>
     <div class="carte ${type}"><span class="badge">${s.badge}</span><div class="boite"><div class="titre">${s.titre}</div>${extra}</div></div>`;

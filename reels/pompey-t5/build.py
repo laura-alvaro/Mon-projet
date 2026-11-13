@@ -2,19 +2,19 @@
 import json, subprocess, re
 from PIL import Image
 scenes = json.loads(subprocess.check_output(["node", "-e", "console.log(JSON.stringify(require('./scenes.js')))"]))
-FIN, T, FPS = 3.6, 0.35, 30
+FIN, T, FPS = 4.8, 0.6, 30
 clips = []
 for i, s in enumerate(scenes):
     D = s["duree"]; src = f"photos/{s['photo']}.jpg"; w, h = Image.open(src).size
     if w / h >= 1:   # paysage / carré : panoramique horizontal
-        sc = "scale=-2:1920"; a, b = (0.25, 0.75) if i % 2 == 0 else (0.75, 0.25)
+        sc = "scale=-2:1920"; a, b = (0.3, 0.7) if i % 2 == 0 else (0.7, 0.3)
         x = f"(iw-1080)*({a}+({b}-{a})*t/{D})"; y = "0"
     else:            # portrait : léger travelling diagonal
         sc = "scale=-2:2080"; x = f"(iw-1080)*(0.2+0.6*t/{D})"; y = f"(ih-1920)*(0.7-0.5*t/{D})"
     out = f"build/clip-{i:02d}.mp4"
     fc = (f"[0]{sc},crop=1080:1920:x='{x}':y='{y}',setsar=1[bg];"
-          f"[1]format=rgba,fade=in:st=0.2:d=0.45:alpha=1[ov];"
-          f"[bg][ov]overlay=0:'if(lt(t,0.2),70,if(lt(t,0.65),70*(0.65-t)/0.45,0))',format=yuv420p[v]")
+          f"[1]format=rgba,fade=in:st=0.4:d=0.6:alpha=1[ov];"
+          f"[bg][ov]overlay=0:'if(lt(t,0.4),70,if(lt(t,1.0),70*(1.0-t)/0.6,0))',format=yuv420p[v]")
     subprocess.run(["ffmpeg","-y","-loglevel","error","-loop","1","-framerate",str(FPS),"-t",str(D),"-i",src,
         "-loop","1","-framerate",str(FPS),"-t",str(D),"-i",f"build/overlay-{i:02d}.png",
         "-filter_complex",fc,"-map","[v]","-r",str(FPS),"-c:v","libx264","-crf","18","-preset","medium",out], check=True)

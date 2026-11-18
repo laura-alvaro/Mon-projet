@@ -1,0 +1,795 @@
+{
+ "version": "1.0-fr",
+ "note": "Lexique français (immobilier) pour nettoyer.py. Si un mot que tu utilises vraiment est retiré, supprime sa ligne ici.",
+ "invisible": [
+  {
+   "cp": "U+200B",
+   "name": "ZERO WIDTH SPACE",
+   "action": "delete"
+  },
+  {
+   "cp": "U+200C",
+   "name": "ZERO WIDTH NON-JOINER",
+   "action": "delete"
+  },
+  {
+   "cp": "U+200D",
+   "name": "ZERO WIDTH JOINER",
+   "action": "delete"
+  },
+  {
+   "cp": "U+2060",
+   "name": "WORD JOINER",
+   "action": "delete"
+  },
+  {
+   "cp": "U+FEFF",
+   "name": "ZERO WIDTH NO-BREAK SPACE / BOM",
+   "action": "delete"
+  },
+  {
+   "cp": "U+00AD",
+   "name": "SOFT HYPHEN",
+   "action": "delete"
+  },
+  {
+   "cp": "U+180E",
+   "name": "MONGOLIAN VOWEL SEPARATOR",
+   "action": "delete"
+  },
+  {
+   "cp": "U+061C",
+   "name": "ARABIC LETTER MARK",
+   "action": "delete"
+  },
+  {
+   "cp": "U+200E",
+   "name": "LEFT-TO-RIGHT MARK",
+   "action": "delete"
+  },
+  {
+   "cp": "U+200F",
+   "name": "RIGHT-TO-LEFT MARK",
+   "action": "delete"
+  },
+  {
+   "cp": "U+E0000-U+E007F",
+   "name": "TAG CHARACTERS (invisible ASCII smuggling)",
+   "action": "delete"
+  },
+  {
+   "cp": "U+00A0",
+   "name": "NO-BREAK SPACE",
+   "action": "space"
+  },
+  {
+   "cp": "U+202F",
+   "name": "NARROW NO-BREAK SPACE",
+   "action": "space"
+  },
+  {
+   "cp": "U+2009",
+   "name": "THIN SPACE",
+   "action": "space"
+  },
+  {
+   "cp": "U+2007",
+   "name": "FIGURE SPACE",
+   "action": "space"
+  },
+  {
+   "cp": "U+2003",
+   "name": "EM SPACE",
+   "action": "space"
+  },
+  {
+   "cp": "U+2002",
+   "name": "EN SPACE",
+   "action": "space"
+  },
+  {
+   "cp": "U+2063",
+   "name": "INVISIBLE SEPARATOR",
+   "action": "delete"
+  }
+ ],
+ "typographic": [
+  {
+   "from": "—",
+   "name": "EM DASH",
+   "to": ", "
+  },
+  {
+   "from": "–",
+   "name": "EN DASH",
+   "to": "-"
+  },
+  {
+   "from": "‘",
+   "name": "LEFT SINGLE QUOTE",
+   "to": "'"
+  },
+  {
+   "from": "’",
+   "name": "RIGHT SINGLE QUOTE",
+   "to": "'"
+  },
+  {
+   "from": "“",
+   "name": "LEFT DOUBLE QUOTE",
+   "to": "\""
+  },
+  {
+   "from": "”",
+   "name": "RIGHT DOUBLE QUOTE",
+   "to": "\""
+  },
+  {
+   "from": "…",
+   "name": "HORIZONTAL ELLIPSIS",
+   "to": "..."
+  },
+  {
+   "from": "′",
+   "name": "PRIME",
+   "to": "'"
+  },
+  {
+   "from": "•",
+   "name": "BULLET",
+   "to": "-"
+  },
+  {
+   "from": "→",
+   "name": "RIGHTWARDS ARROW",
+   "to": "->"
+  }
+ ],
+ "words": [
+  {
+   "find": "crucial",
+   "replace": "important",
+   "family": "mots IA"
+  },
+  {
+   "find": "cruciale",
+   "replace": "importante",
+   "family": "mots IA"
+  },
+  {
+   "find": "cruciaux",
+   "replace": "importants",
+   "family": "mots IA"
+  },
+  {
+   "find": "cruciales",
+   "replace": "importantes",
+   "family": "mots IA"
+  },
+  {
+   "find": "primordial",
+   "replace": "important",
+   "family": "mots IA"
+  },
+  {
+   "find": "primordiale",
+   "replace": "importante",
+   "family": "mots IA"
+  },
+  {
+   "find": "véritable",
+   "replace": "",
+   "family": "mots IA"
+  },
+  {
+   "find": "véritables",
+   "replace": "",
+   "family": "mots IA"
+  },
+  {
+   "find": "optimiser",
+   "replace": "améliorer",
+   "family": "mots IA"
+  },
+  {
+   "find": "optimisez",
+   "replace": "améliorez",
+   "family": "mots IA"
+  },
+  {
+   "find": "optimise",
+   "replace": "améliore",
+   "family": "mots IA"
+  },
+  {
+   "find": "booster",
+   "replace": "faire monter",
+   "family": "mots IA"
+  },
+  {
+   "find": "levier",
+   "replace": "moyen",
+   "family": "mots IA"
+  },
+  {
+   "find": "leviers",
+   "replace": "moyens",
+   "family": "mots IA"
+  },
+  {
+   "find": "synergie",
+   "replace": "lien",
+   "family": "mots IA"
+  },
+  {
+   "find": "holistique",
+   "replace": "global",
+   "family": "mots IA"
+  },
+  {
+   "find": "indéniablement",
+   "replace": "",
+   "family": "mots IA"
+  },
+  {
+   "find": "assurément",
+   "replace": "",
+   "family": "mots IA"
+  },
+  {
+   "find": "incontestablement",
+   "replace": "",
+   "family": "mots IA"
+  },
+  {
+   "find": "nul doute que",
+   "replace": "",
+   "family": "mots IA"
+  }
+ ],
+ "phrases": [
+  {
+   "find": "dans un monde en constante évolution",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "dans un monde en perpétuelle évolution",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "dans le paysage immobilier actuel",
+   "replace": "en ce moment",
+   "family": "ouvertures"
+  },
+  {
+   "find": "dans le contexte actuel",
+   "replace": "en ce moment",
+   "family": "ouvertures"
+  },
+  {
+   "find": "à l'heure actuelle",
+   "replace": "aujourd'hui",
+   "family": "ouvertures"
+  },
+  {
+   "find": "il est important de noter que",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "il convient de noter que",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "il est important de souligner que",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "force est de constater que",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "il va sans dire que",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "dans cette vidéo, je vais vous montrer",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "dans cette vidéo, je vais te montrer",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "sans plus attendre",
+   "replace": "",
+   "family": "ouvertures"
+  },
+  {
+   "find": "plongeons dans",
+   "replace": "regardons",
+   "family": "ouvertures"
+  },
+  {
+   "find": "plongez dans",
+   "replace": "entrez dans",
+   "family": "ouvertures"
+  },
+  {
+   "find": "en conclusion",
+   "replace": "bref",
+   "family": "liaisons"
+  },
+  {
+   "find": "en somme",
+   "replace": "bref",
+   "family": "liaisons"
+  },
+  {
+   "find": "en définitive",
+   "replace": "au final",
+   "family": "liaisons"
+  },
+  {
+   "find": "de surcroît",
+   "replace": "en plus",
+   "family": "liaisons"
+  },
+  {
+   "find": "en outre",
+   "replace": "en plus",
+   "family": "liaisons"
+  },
+  {
+   "find": "par ailleurs",
+   "replace": "aussi",
+   "family": "liaisons"
+  },
+  {
+   "find": "il est essentiel de",
+   "replace": "il faut",
+   "family": "liaisons"
+  },
+  {
+   "find": "il est crucial de",
+   "replace": "il faut",
+   "family": "liaisons"
+  },
+  {
+   "find": "il est primordial de",
+   "replace": "il faut",
+   "family": "liaisons"
+  },
+  {
+   "find": "afin de",
+   "replace": "pour",
+   "family": "liaisons"
+  },
+  {
+   "find": "afin que",
+   "replace": "pour que",
+   "family": "liaisons"
+  },
+  {
+   "find": "en effet",
+   "replace": "",
+   "family": "liaisons"
+  },
+  {
+   "find": "tirer parti de",
+   "replace": "profiter de",
+   "family": "verbes"
+  },
+  {
+   "find": "tirer pleinement parti de",
+   "replace": "profiter de",
+   "family": "verbes"
+  },
+  {
+   "find": "mettre en lumière",
+   "replace": "montrer",
+   "family": "verbes"
+  },
+  {
+   "find": "met en lumière",
+   "replace": "montre",
+   "family": "verbes"
+  },
+  {
+   "find": "joue un rôle clé",
+   "replace": "compte beaucoup",
+   "family": "verbes"
+  },
+  {
+   "find": "jouer un rôle clé",
+   "replace": "compter beaucoup",
+   "family": "verbes"
+  },
+  {
+   "find": "maximiser la valeur de votre bien",
+   "replace": "vendre au meilleur prix",
+   "family": "verbes"
+  },
+  {
+   "find": "maximiser la valeur de ton bien",
+   "replace": "vendre au meilleur prix",
+   "family": "verbes"
+  },
+  {
+   "find": "nous vous proposons",
+   "replace": "voici",
+   "family": "verbes"
+  },
+  {
+   "find": "je vous propose de découvrir",
+   "replace": "voici",
+   "family": "verbes"
+  },
+  {
+   "find": "venez découvrir",
+   "replace": "venez voir",
+   "family": "verbes"
+  },
+  {
+   "find": "découvrez sans plus tarder",
+   "replace": "venez voir",
+   "family": "verbes"
+  },
+  {
+   "find": "découvrez ce",
+   "replace": "voici ce",
+   "family": "verbes"
+  },
+  {
+   "find": "découvrez cette",
+   "replace": "voici cette",
+   "family": "verbes"
+  },
+  {
+   "find": "découvrez cet",
+   "replace": "voici cet",
+   "family": "verbes"
+  },
+  {
+   "find": "laissez-vous séduire par",
+   "replace": "venez voir",
+   "family": "verbes"
+  },
+  {
+   "find": "laissez-vous charmer par",
+   "replace": "venez voir",
+   "family": "verbes"
+  },
+  {
+   "find": "laissez-vous tenter par",
+   "replace": "venez voir",
+   "family": "verbes"
+  },
+  {
+   "find": "bénéficiant de",
+   "replace": "avec",
+   "family": "verbes"
+  },
+  {
+   "find": "bénéficiant d'",
+   "replace": "avec ",
+   "family": "verbes"
+  },
+  {
+   "find": "bénéficie de",
+   "replace": "a",
+   "family": "verbes"
+  },
+  {
+   "find": "bénéficie d'",
+   "replace": "a ",
+   "family": "verbes"
+  },
+  {
+   "find": "offrant",
+   "replace": "avec",
+   "family": "verbes"
+  },
+  {
+   "find": "permettant de",
+   "replace": "pour",
+   "family": "verbes"
+  },
+  {
+   "find": "un véritable havre de paix",
+   "replace": "un coin au calme",
+   "family": "annonce immo"
+  },
+  {
+   "find": "havre de paix",
+   "replace": "coin au calme",
+   "family": "annonce immo"
+  },
+  {
+   "find": "dans un écrin de verdure",
+   "replace": "au milieu de la verdure",
+   "family": "annonce immo"
+  },
+  {
+   "find": "écrin de verdure",
+   "replace": "coin de verdure",
+   "family": "annonce immo"
+  },
+  {
+   "find": "à couper le souffle",
+   "replace": "superbe",
+   "family": "annonce immo"
+  },
+  {
+   "find": "coup de cœur assuré",
+   "replace": "vous allez adorer",
+   "family": "annonce immo"
+  },
+  {
+   "find": "coup de coeur assuré",
+   "replace": "vous allez adorer",
+   "family": "annonce immo"
+  },
+  {
+   "find": "ne manquez pas cette opportunité",
+   "replace": "à voir vite",
+   "family": "annonce immo"
+  },
+  {
+   "find": "une opportunité à ne pas manquer",
+   "replace": "un bien à voir vite",
+   "family": "annonce immo"
+  },
+  {
+   "find": "opportunité unique",
+   "replace": "occasion rare",
+   "family": "annonce immo"
+  },
+  {
+   "find": "allie charme et modernité",
+   "replace": "mélange l'ancien et le moderne",
+   "family": "annonce immo"
+  },
+  {
+   "find": "alliant charme et modernité",
+   "replace": "entre ancien et moderne",
+   "family": "annonce immo"
+  },
+  {
+   "find": "aux prestations haut de gamme",
+   "replace": "aux finitions soignées",
+   "family": "annonce immo"
+  },
+  {
+   "find": "prestations de qualité",
+   "replace": "belles finitions",
+   "family": "annonce immo"
+  },
+  {
+   "find": "à proximité immédiate de",
+   "replace": "juste à côté de",
+   "family": "annonce immo"
+  },
+  {
+   "find": "toutes commodités à proximité",
+   "replace": "commerces et services à côté",
+   "family": "annonce immo"
+  },
+  {
+   "find": "cadre de vie privilégié",
+   "replace": "coin agréable à vivre",
+   "family": "annonce immo"
+  },
+  {
+   "find": "cadre de vie exceptionnel",
+   "replace": "coin agréable à vivre",
+   "family": "annonce immo"
+  },
+  {
+   "find": "subtil mélange",
+   "replace": "mélange",
+   "family": "annonce immo"
+  },
+  {
+   "find": "savant mélange",
+   "replace": "mélange",
+   "family": "annonce immo"
+  },
+  {
+   "find": "idéalement situé",
+   "replace": "bien placé",
+   "family": "annonce immo"
+  },
+  {
+   "find": "idéalement située",
+   "replace": "bien placée",
+   "family": "annonce immo"
+  },
+  {
+   "find": "idéalement situés",
+   "replace": "bien placés",
+   "family": "annonce immo"
+  },
+  {
+   "find": "idéalement situées",
+   "replace": "bien placées",
+   "family": "annonce immo"
+  },
+  {
+   "find": "et bien plus encore",
+   "replace": "",
+   "family": "annonce immo"
+  },
+  {
+   "find": "en plein essor",
+   "replace": "qui bouge",
+   "family": "annonce immo"
+  },
+  {
+   "find": "à chaque étape de votre projet",
+   "replace": "de l'estimation à la signature",
+   "family": "discours agent"
+  },
+  {
+   "find": "à chaque étape de ton projet",
+   "replace": "de l'estimation à la signature",
+   "family": "discours agent"
+  },
+  {
+   "find": "en toute sérénité",
+   "replace": "sans stress",
+   "family": "discours agent"
+  },
+  {
+   "find": "en toute confiance",
+   "replace": "l'esprit tranquille",
+   "family": "discours agent"
+  },
+  {
+   "find": "un accompagnement sur mesure",
+   "replace": "un suivi de A à Z",
+   "family": "discours agent"
+  },
+  {
+   "find": "un accompagnement personnalisé",
+   "replace": "un suivi de A à Z",
+   "family": "discours agent"
+  },
+  {
+   "find": "n'hésitez pas à me contacter",
+   "replace": "écrivez-moi",
+   "family": "discours agent"
+  },
+  {
+   "find": "n'hésite pas à me contacter",
+   "replace": "écris-moi",
+   "family": "discours agent"
+  },
+  {
+   "find": "abonnez-vous pour plus de contenu",
+   "replace": "",
+   "family": "discours agent"
+  },
+  {
+   "find": "abonne-toi pour plus de contenu",
+   "replace": "",
+   "family": "discours agent"
+  },
+  {
+   "find": "un subtil mélange qui allie charme et modernité",
+   "replace": "entre ancien et moderne",
+   "family": "annonce immo"
+  },
+  {
+   "find": "un mélange qui allie charme et modernité",
+   "replace": "entre ancien et moderne",
+   "family": "annonce immo"
+  }
+ ],
+ "structures": [
+  {
+   "id": "pas-seulement",
+   "regex": "(?i)\\bce n'?est pas (?:seulement|juste|que|uniquement) [^.!?\\n]{2,60}[,.] c'?est\\b",
+   "name": "« Ce n'est pas seulement X, c'est Y »",
+   "fix": "Dis directement Y. La fausse opposition sonne IA."
+  },
+  {
+   "id": "non-seulement",
+   "regex": "(?i)\\bnon seulement\\b[^.!?\\n]{2,80}\\bmais (?:aussi|également)\\b",
+   "name": "« Non seulement… mais aussi… »",
+   "fix": "Fais deux phrases, ou garde la plus forte."
+  },
+  {
+   "id": "il-ne-sagit-pas",
+   "regex": "(?i)\\bil ne s'?agit pas (?:de|d')[^.!?\\n]{2,60}[,.] il s'?agit\\b",
+   "name": "« Il ne s'agit pas de X, il s'agit de Y »",
+   "fix": "Commence par Y."
+  },
+  {
+   "id": "reveal",
+   "regex": "(?i)^\\s*(?:le résultat|la cerise sur le gâteau|le petit plus|le bonus|le secret|la vérité)\\s*\\?\\s*$",
+   "name": "Question-révélation sur une ligne (« Le résultat ? »)",
+   "fix": "Donne l'info directement dans la phrase."
+  },
+  {
+   "id": "triade",
+   "regex": "(?i)\\b\\w+, \\w+ et \\w+\\.",
+   "name": "Liste de 3 (« lumineux, spacieux et moderne. »)",
+   "fix": "Mets 2 éléments ou un fait chiffré. Le rythme par 3 est le réflexe de l'IA."
+  },
+  {
+   "id": "que-vous-soyez",
+   "regex": "(?i)\\bque (?:vous soyez|tu sois)\\b[^.!?\\n]{2,80}\\bou\\b",
+   "name": "« Que vous soyez X ou Y »",
+   "fix": "Parle à une seule personne précise."
+  },
+  {
+   "id": "nhesitez",
+   "regex": "(?i)\\bn'?h[ée]sit(?:ez|e) pas\\b",
+   "name": "« N'hésitez pas à… »",
+   "fix": "Donne l'action directement : « Écrivez-moi VISITE », « Appelez-moi au … »."
+  },
+  {
+   "id": "saviez-vous",
+   "regex": "(?i)\\ble saviez-vous\\b|\\ble savais-tu\\b",
+   "name": "« Le saviez-vous ? »",
+   "fix": "Balance l'info, sans la question d'intro."
+  },
+  {
+   "id": "video-preamble",
+   "regex": "(?i)\\bdans (?:cette|la) vidéo\\b|\\baujourd'?hui,? (?:je vais|on va) (?:vous|te) (?:montrer|parler)\\b",
+   "name": "Préambule vidéo",
+   "fix": "Commence par le fait le plus fort, pas par l'annonce de la vidéo."
+  },
+  {
+   "id": "vous-revez",
+   "regex": "(?i)^\\s*(?:vous rêvez|tu rêves|imaginez|imagine)\\b",
+   "name": "Ouverture « Vous rêvez de… / Imaginez… »",
+   "fix": "Commence par un fait : prix, m², quartier, détail visible."
+  },
+  {
+   "id": "adjectifs-annonce",
+   "regex": "(?i)\\b(?:sublimes?|exceptionnel(?:le)?s?|incontournables?|joyau|pépites?|perle rare|cocon|écrin|charmant(?:e)?s?|magnifiques?|idylliques?|prestigieu(?:x|se|ses))\\b",
+   "name": "Adjectif d'annonce cliché",
+   "fix": "Remplace par un fait concret : m², exposition, vue, année, distance à pied, montant des charges."
+  },
+  {
+   "id": "au-coeur",
+   "regex": "(?i)\\bau c(?:œ|oe)ur d(?:e|u|es|')",
+   "name": "« Au cœur de… »",
+   "fix": "Dis où exactement : « à 3 min à pied de la place du marché »."
+  },
+  {
+   "id": "bait",
+   "regex": "(?i)\\b(?:abonnez-vous|abonne-toi|identifie(?:z)? (?:quelqu'un|une personne|un ami)|double[- ]tap|like si|partage(?:z)? si)\\b",
+   "name": "Appel réflexe (abonne-toi, identifie…)",
+   "fix": "Une seule demande utile par post, liée au bien : « Commente VISITE »."
+  },
+  {
+   "id": "emoji-bullets",
+   "regex": "(?m)^\\s*[\\U0001F300-\\U0001FAFF✅✔✨➡⭐]️?\\s+\\S",
+   "name": "Liste à puces en emojis",
+   "fix": "Garde 1 ou 2 emojis max dans le texte, pas un par ligne."
+  },
+  {
+   "id": "hashtag-wall",
+   "regex": "(?:#\\w+\\s*){6,}",
+   "name": "Mur de hashtags",
+   "fix": "3 à 5 hashtags précis (ville, quartier, type de bien)."
+  },
+  {
+   "id": "shouting",
+   "regex": "\\b[A-ZÀ-Ý]{3,}\\s+[A-ZÀ-Ý]{3,}\\s+[A-ZÀ-Ý]{3,}\\b",
+   "name": "3 mots en majuscules d'affilée",
+   "fix": "Un seul mot en majuscules maximum (ex. le mot-clé VISITE)."
+  }
+ ]
+}
